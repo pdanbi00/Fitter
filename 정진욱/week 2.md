@@ -2,7 +2,6 @@
 
 Source System에서 Target System으로 Data를 전해줄 때 System의 개수와 사이즈가 작다면 문제가 없지만 밑의 그림과 같이 System의 개수와 사이즈가 많아지면 Data를 전달할 때 큰 복잡함이 생기게 된다. 그래서 중간에 Kafka를 통해서 데이터를 모아 Target System에 전해주면 복잡함이 줄어들게 된다.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/daefb204-8a43-4d1e-830b-0df3e263cc95/Untitled.png)
 
 ## Kafka의 장점
 
@@ -11,7 +10,6 @@ Source System에서 Target System으로 Data를 전해줄 때 System의 개수�
 3. 시스템을 종료하지 않고 업그레이드하고 정비할 수 있다.
 4. 수평적 확장성이 좋아서 브로커를 클러스터에 수백개단위만큼 추가할 수 있다.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/44a60c0e-df31-48ec-99bc-391d059ec8dd/Untitled.png)
 
 ## Kafka 활용 사례
 
@@ -29,15 +27,12 @@ ex) logs, purchases, twitter_tweets, trucks_gps
 - 데이터 검증이 없기 때문에 원하는 건 모두 Kafka 토픽에 전송할 수 있다.
 - **Kafka프로듀서**를 통해 토픽에 데이터를 추가하고 **Kafka컨슈머**를 통해 데이터를 읽는다.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/f20c2fea-e767-4c92-9471-b58a6772ec45/Untitled.png)
 
 ## Partition과 Offset
 
 - 토픽은 여러 개의 파티션으로 나누어질 수 있다.
 - 데이터가 Kafka 토픽으로 전송되면 임의의 파티션에 할당된다. (Key가 없는 경우)
 - 토픽의 파티션을 원하는 만큼 가질 수 있다. (적절한 파티션 개수를 생각해서 결정해야 한다.)
-
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/7872e928-2c6c-4c6a-9853-727a735ff589/Untitled.png)
 
 - 메세지는 각 파티션에 순서대로 작성되고 각각의 id를 가지고 있다.
     
@@ -73,13 +68,11 @@ ex) logs, purchases, twitter_tweets, trucks_gps
     - 해싱 전략은 murmur2 알고리즘을 통해 키의 바이트를 확인하고 타깃 파티션이 어떤 파티션인지 확인하는 것을 말한다.
     - 즉, 프로듀서가 키의 바이트를 이용해서 메시지를 어느 파티션에 전송할지 결정하게 된다.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/fb0a5f6f-f06a-4520-9a04-52732197e5f9/Untitled.png)
 
 ex) 각 트럭에 대한 데이터를 받을 때 id 123의 트럭은 파티션 0에만 계속 저장되게 하고 id 345의 트럭의 데이터는 파티션 1에만 계속 저장되게 한다.
 
 ### Message Key의 구성
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/4e1086c8-ca22-4952-9fe9-e267c2501fe6/Untitled.png)
 
 ### Message Serializer
 
@@ -87,7 +80,6 @@ ex) 각 트럭에 대한 데이터를 받을 때 id 123의 트럭은 파티션 0
 - 메시지는 바이트로 구성되어 있는 것이 아니기에 직렬화를 통해 바이트로 바꿔야한다.
 - 메시지 시리얼라이저는 value와 key에만 사용된다.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/d6a5d981-b5bd-4c08-9f2e-e2e364651d11/Untitled.png)
 
 - Message Serializer의 직렬화를 통해 바이너리로 표현된 키와 값을 가진 메세지는 Kafka로 전송할 수 있다.
 - Kafka에는 String, Int, Float, Avro, Protobuf와 같은 Serializer를 가지고 있다.
@@ -100,7 +92,6 @@ ex) 각 트럭에 대한 데이터를 받을 때 id 123의 트럭은 파티션 0
 - 각 파티션의 데이터는 low to high 오프셋 순서대로 읽히게 된다.
 - 파티션은 서로 독립적이여서 어떤 파티션을 먼저 읽을지는 보장되지 않는다.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/b58e9492-15a0-485d-ad51-144058c01c4b/Untitled.png)
 
 ## Consumer Deserializer
 
@@ -110,19 +101,16 @@ ex) 각 트럭에 대한 데이터를 받을 때 id 123의 트럭은 파티션 0
     - 만약 데이터 타입을 변경하고 싶다면 새로운 토픽을 만들어야 한다.
     - 밑의 예시에서는 key는 Int형식 value는 String형식
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/5596b8be-0b69-40f0-b391-0f62cfb820da/Untitled.png)
 
 ## Consumer Group
 
 - 만약 파티션보다 컨슈머가 더 많으면 어떻게 될까?
     - 이러한 경우 몇몇의 컨슈머는 비활성화된다.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/c2c4c87b-d18b-4ebd-b56f-78b09edc1de2/Untitled.png)
 
 - kafka는 여러 개의 컨슈머 그룹이 같은 토픽을 가지는 것을 허용한다.
     - 보통 서비스당 하나의 컨슈머 그룹을 갖게 된다.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/29bf2334-f257-4fe2-a48b-83146763096b/Untitled.png)
 
 - 컨슈머 그룹을 생성하기 위해 group.id라는 property를 사용하고 컨슈머는 해당 id를 통해 자신이 속한 그룹을 알게된다.
 
@@ -133,7 +121,6 @@ ex) 각 트럭에 대한 데이터를 받을 때 id 123의 트럭은 파티션 0
 - 브로커는 주기적으로 컨슈머가 데이터 처리를 완료하면 컨슈머 오프셋 토픽에 커밋을 통해 기록하라고 알린다. 그리고 커밋을 통해 Kafka 브로커는 해당 컨슈머가 데이터를 어디까지 성공적으로 읽었는지 알게 된다.
 - 이런 식으로 하면 컨슈머가 가끔 죽게 돼도 읽었던 부분부터 다시 읽을 수 있다.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/f6d009cf-a288-4676-9f77-7b179df4e08d/Untitled.png)
 
 ### Offset Commit Modes
 
@@ -150,7 +137,6 @@ ex) 각 트럭에 대한 데이터를 받을 때 id 123의 트럭은 파티션 0
 
 ### 클라이언트가 Kafka 클러스터에 접속하는 방법
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/febba975-949b-4ddb-acf8-8003f01b9aa9/Untitled.png)
 
 - Kafka 클러스터는 다수의 브로커(서버)들로 구성되어 있다.
 - 브로커는 ID(정수)로 구분한다.
@@ -169,7 +155,6 @@ ex) 각 트럭에 대한 데이터를 받을 때 id 123의 트럭은 파티션 0
 
 ### Kafka의 수평적 스케일링
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/40913718-d8aa-45a3-b3b6-0b363462ea7c/Untitled.png)
 
 - 브로커는 모든 데이터를 가지는 것이 아닌 필요한 데이터만 갖는다.
 
@@ -179,22 +164,17 @@ ex) 각 트럭에 대한 데이터를 받을 때 id 123의 트럭은 파티션 0
 - 만약 브로커가 다운되면 다른 브로커에 데이터 사본이 있어 데이터를 제공할 수 있다.
 - 일반적으로 N이라는 숫자의 복제 계수를 선택하면 영구적으로 최대 N-1개의 브로커를 잃어도 된다. 그래도 데이터 사본이 클러스터 안의 어딘가에 남아있기 때문이다.
     
-    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/afb40a5e-3b1d-4d03-a4a6-d858af137fe6/Untitled.png)
-    
+
 - 오직 하나의 브로커는 주어진 파티션의 리더(예시 그림에서 별)가 될 수 있다.
 - 리더에서 복제된 것을 ISR(in-sync replica)라고 부른다.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/bdb8950e-4611-4772-8fe0-dcada8e709d0/Untitled.png)
 
 - Kafka 프로듀서는 오직 리더 브로커에게만 데이터를 전송할 수 있고 기본 값으로 리더 브로커에게 데이터를 읽는다.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/0cb827fb-5037-49a0-85ba-830b717b9bfb/Untitled.png)
 
 - But! 2.4버전 이상에서는 컨슈머로부터 리더보다 레플리카가 더 가깝다면 레플리카에서도 데이터를 읽게 해주는 기능이 추가 되었다.
     - 이렇게 하면 레이턴시가 개선되어 만약 클라우드를 사용한다면 네트워크 비용이 줄어든다.
-    
-    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/fd6edf05-7d11-4682-aec3-d4f5565d8152/Untitled.png)
-    
+       
 
 ## Producer Acknowledgements & Kafka Topic Durability
 
@@ -222,8 +202,6 @@ ex) 각 트럭에 대한 데이터를 받을 때 id 123의 트럭은 파티션 0
 - 주키퍼는 홀수 개수의 서버를 가지고 작동한다. (1, 3, 5, 7) 보통 7개를 넘지 않는다.
 - 주키퍼는 쓰기를 담당하는 1개의 리더를 가지고 있고 나머지는 팔로워로 읽기를 담당한다.
 - 옛날에는 주키퍼에 컨슈머 오프셋을 저장했지만 이제는 내부 kafka 토픽에 저장한다.
-
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e84ae56e-cef7-4e19-b37a-4463af5d5a65/b57f340f-6c0d-42a6-821d-2db81c2dc1c2/Untitled.png)
 
 ## Kafka KRaft
 
