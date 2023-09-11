@@ -1,5 +1,6 @@
 package com.mk.fitter.api.namedwod.service;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.mk.fitter.api.namedwod.repository.WodRecordRepository;
 import com.mk.fitter.api.namedwod.repository.WodRepository;
-import com.mk.fitter.api.namedwod.repository.entity.WodRecordDto;
+import com.mk.fitter.api.namedwod.repository.dto.WodRecordDto;
 import com.mk.fitter.api.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,18 @@ public class WodServiceImpl implements WodService {
 			return byId.get();
 		} else {
 			throw new Exception("와드 Id를 확인하세요");
+		}
+	}
+
+	@Override
+	public boolean modifyWodRecord(int wodId, LocalTime time) throws Exception {
+		WodRecordDto foundWod = wodRecordRepository.findByWod_Id(wodId);
+		if (foundWod == null) {
+			throw new Exception("와드 기록이 존재하지 않습니다.");
+		}else{
+			foundWod.setTime(time);
+			wodRecordRepository.save(foundWod);
+			return true;
 		}
 	}
 }

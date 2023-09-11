@@ -1,5 +1,6 @@
 package com.mk.fitter.api.namedwod.controller;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -7,12 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mk.fitter.api.namedwod.repository.entity.WodRecordDto;
+import com.mk.fitter.api.namedwod.repository.dto.WodRecordDto;
 import com.mk.fitter.api.namedwod.service.WodService;
 
 import lombok.RequiredArgsConstructor;
@@ -61,6 +63,17 @@ public class WodController {
 		}
 	}
 
+
+	@PutMapping("/modify/{wodId}")
+	public ResponseEntity<?> modifyWodRecord(@PathVariable int wodId, @RequestBody LocalTime time){
+		boolean result = false;
+		try{
+			result = wodService.modifyWodRecord(wodId, time);
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}catch (Exception e){
+			return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 	
 }

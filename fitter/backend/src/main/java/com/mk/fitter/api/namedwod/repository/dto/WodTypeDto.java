@@ -1,4 +1,4 @@
-package com.mk.fitter.api.namedwod.repository.entity;
+package com.mk.fitter.api.namedwod.repository.dto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
