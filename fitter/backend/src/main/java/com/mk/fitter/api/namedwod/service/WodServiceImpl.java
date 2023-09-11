@@ -48,14 +48,20 @@ public class WodServiceImpl implements WodService {
 	}
 
 	@Override
-	public boolean modifyWodRecord(int wodId, LocalTime time) throws Exception {
-		WodRecordDto foundWod = wodRecordRepository.findByWod_Id(wodId);
-		if (foundWod == null) {
-			throw new Exception("와드 기록이 존재하지 않습니다.");
-		}else{
-			foundWod.setTime(time);
-			wodRecordRepository.save(foundWod);
+	public boolean modifyWodRecord(int wodRecordId, LocalTime time) throws Exception {
+		Optional<WodRecordDto> foundWod = wodRecordRepository.findById(wodRecordId);
+		if (foundWod.isPresent()) {
+			WodRecordDto modifyWod = foundWod.get();
+			modifyWod.setTime(time);
+			wodRecordRepository.save(modifyWod);
 			return true;
+		}else{
+			throw new Exception("와드 기록이 존재하지 않습니다.");
 		}
+	}
+
+	@Override
+	public boolean deleteWodRecord(int wodRecordId) {
+		return wodRecordRepository.deleteById(wodRecordId);
 	}
 }

@@ -13,4 +13,6 @@ public interface WodService {
 	WodRecordDto getWodRecord(int wodId) throws Exception;
 
 	boolean modifyWodRecord(int wodId, LocalTime time) throws Exception;
+
+	boolean deleteWodRecord(int wodId);
 }

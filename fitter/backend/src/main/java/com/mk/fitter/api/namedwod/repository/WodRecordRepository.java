@@ -13,5 +13,5 @@ public interface WodRecordRepository extends JpaRepository<WodRecordDto, Integer
 
 	WodRecordDto findByWod_IdAndUser_Id(int wodId, int userId);
 
-	WodRecordDto findByWod_Id(int wodId);
+	boolean deleteById(int wodRecordId);
 }
