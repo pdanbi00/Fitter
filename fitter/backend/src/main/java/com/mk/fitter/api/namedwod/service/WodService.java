@@ -8,4 +8,6 @@ public interface WodService {
 	boolean createWodRecord(WodRecordDto wodRecordDto) throws Exception;
 
 	List<WodRecordDto> getWodRecordList();
+
+	WodRecordDto getWodRecord(int wodId) throws Exception;
 }

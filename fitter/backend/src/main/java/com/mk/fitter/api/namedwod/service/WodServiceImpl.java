@@ -1,6 +1,7 @@
 package com.mk.fitter.api.namedwod.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -33,5 +34,15 @@ public class WodServiceImpl implements WodService {
 	@Override
 	public List<WodRecordDto> getWodRecordList() {
 		return wodRecordRepository.findAll();
+	}
+
+	@Override
+	public WodRecordDto getWodRecord(int wodId) throws Exception {
+		Optional<WodRecordDto> byId = wodRecordRepository.findById(wodId);
+		if (byId.isPresent()) {
+			return byId.get();
+		} else {
+			throw new Exception("와드 Id를 확인하세요");
+		}
 	}
 }
