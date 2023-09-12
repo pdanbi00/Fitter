@@ -2,6 +2,7 @@ package com.mk.fitter.api.dailyrecord.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -54,5 +55,18 @@ public class DailyRecordServiceImpl implements DailyRecordService {
 	@Override
 	public boolean deleteDailyRecord(int dailyRecordId) {
 		return dailyRecordRepository.deleteById(dailyRecordId);
+	}
+
+	@Override
+	public boolean modifyDailyRecord(int dailyRecordId, Map<String, String> memo) throws Exception {
+		Optional<DailyRecordDto> byId = dailyRecordRepository.findById(dailyRecordId);
+		if (byId.isPresent()) {
+			DailyRecordDto dailyRecordDto = byId.get();
+			dailyRecordDto.setMemo(memo.get("memo"));
+			dailyRecordRepository.save(dailyRecordDto);
+			return true;
+		} else {
+			throw new Exception("삭제에 실패했습니다.");
+		}
 	}
 }
