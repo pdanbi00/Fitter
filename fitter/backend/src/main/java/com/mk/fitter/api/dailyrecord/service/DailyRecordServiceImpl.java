@@ -45,4 +45,14 @@ public class DailyRecordServiceImpl implements DailyRecordService {
 		}
 		return true;
 	}
+
+	@Override
+	public DailyRecordDto getDailyRecordByDate(LocalDate date, int userId) {
+		return dailyRecordRepository.findByDateAndUserDto_Id(date, userId);
+	}
+
+	@Override
+	public boolean deleteDailyRecord(int dailyRecordId) {
+		return dailyRecordRepository.deleteById(dailyRecordId);
+	}
 }

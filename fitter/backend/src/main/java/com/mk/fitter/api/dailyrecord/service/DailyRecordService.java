@@ -9,4 +9,8 @@ public interface DailyRecordService {
 	List<DailyRecordDto> getAllRecordsByMonth(int userId, LocalDate startDate, LocalDate endDate);
 
 	boolean writeDailyRecord(DailyRecordDto dailyRecordDto) throws Exception;
+
+	DailyRecordDto getDailyRecordByDate(LocalDate date, int userId);
+
+	boolean deleteDailyRecord(int dailyRecordId);
 }
