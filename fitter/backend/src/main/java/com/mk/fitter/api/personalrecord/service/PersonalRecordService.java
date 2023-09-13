@@ -13,4 +13,6 @@ public interface PersonalRecordService {
 	boolean creatRecord(Integer userId, HashMap<String, String> requestBody) throws Exception;
 
 	boolean modifyRecord(Integer userId, HashMap<String, Integer> requestBody, int personalRecordId) throws Exception;
+
+	Boolean deleteRecord(int personalRecordId, Integer userId) throws Exception;
 }

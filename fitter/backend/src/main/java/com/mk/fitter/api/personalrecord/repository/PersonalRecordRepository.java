@@ -12,4 +12,5 @@ public interface PersonalRecordRepository extends JpaRepository<PersonalRecordDt
 
 	List<PersonalRecordDto> findByUserDto_Id(int userId);
 
+	boolean deleteById(int id);
 }
