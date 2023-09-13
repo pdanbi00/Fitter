@@ -57,4 +57,22 @@ public class PersonalRecordServiceImpl implements PersonalRecordService {
 		PersonalRecordDto save = personalRecordRepository.save(record);
 		return true;
 	}
+
+	@Override
+	public boolean modifyRecord(Integer userId, HashMap<String, Integer> requestBody, int personalRecordId) throws
+		Exception {
+		Optional<UserDto> findUser = userRepository.findById(userId);
+		if (findUser.isEmpty()) {
+			throw new Exception("존재하지 않는 유저입니다.");
+		}
+		Optional<PersonalRecordDto> findRecord = personalRecordRepository.findById(personalRecordId);
+		if (findRecord.isEmpty()) {
+			throw new Exception("존재하지 않는 기록입니다.");
+		}
+		if (findRecord.get().getUserDto().getId() != userId) {
+			throw new Exception("본인이 작성한 기록이 아닙니다.");
+		}
+		findRecord.get().setMaxWeight(requestBody.get("maxWeight"));
+		return true;
+	}
 }

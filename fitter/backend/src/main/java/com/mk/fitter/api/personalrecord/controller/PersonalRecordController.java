@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,6 +60,19 @@ public class PersonalRecordController {
 		try {
 			Optional<Integer> UID = jwtService.extractUID(Authorization);
 			boolean result = personalRecordService.creatRecord(UID.get(), requestBody);
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@PutMapping("/modify/{personalRecordId}")
+	public ResponseEntity<Boolean> modifyRecord(@PathVariable int personalRecordId,
+		@RequestHeader String Authorization, @RequestBody HashMap<String, Integer> requestBody) {
+		try {
+			Optional<Integer> UID = jwtService.extractUID(Authorization);
+			boolean result = personalRecordService.modifyRecord(UID.get(), requestBody, personalRecordId);
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage());
