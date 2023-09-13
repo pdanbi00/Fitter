@@ -1,12 +1,17 @@
 package com.mk.fitter.api.personalrecord.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.mk.fitter.api.personalrecord.repository.PersonalRecordRepository;
+import com.mk.fitter.api.personalrecord.repository.WorkoutRepository;
 import com.mk.fitter.api.personalrecord.repository.dto.PersonalRecordDto;
+import com.mk.fitter.api.personalrecord.repository.dto.WorkoutDto;
+import com.mk.fitter.api.user.repository.UserRepository;
+import com.mk.fitter.api.user.repository.dto.UserDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 public class PersonalRecordServiceImpl implements PersonalRecordService {
 
 	private final PersonalRecordRepository personalRecordRepository;
+	private final UserRepository userRepository;
+	private final WorkoutRepository workoutRepository;
 
 	@Override
 	public List<PersonalRecordDto> getRecordList(Integer userId) {
@@ -29,5 +36,25 @@ public class PersonalRecordServiceImpl implements PersonalRecordService {
 			throw new Exception("기록이 존재하지 않습니다.");
 		}
 		return byId.get();
+	}
+
+	@Override
+	public boolean creatRecord(Integer userId, HashMap<String, String> requestBody) throws Exception {
+		Optional<UserDto> byId = userRepository.findById(userId);
+		if (byId.isEmpty()) {
+			throw new Exception("유저가 존재하지 않습니다.");
+		}
+		String workoutName = requestBody.get("workoutName");
+		Optional<WorkoutDto> findWorkout = workoutRepository.findByName(workoutName);
+		if (findWorkout.isEmpty()) {
+			throw new Exception("운동이 존재하지 않습니다.");
+		}
+		PersonalRecordDto record = PersonalRecordDto.builder()
+			.userDto(byId.get())
+			.workoutDto(findWorkout.get())
+			.maxWeight(Integer.parseInt(requestBody.get("maxWeight")))
+			.build();
+		PersonalRecordDto save = personalRecordRepository.save(record);
+		return true;
 	}
 }
