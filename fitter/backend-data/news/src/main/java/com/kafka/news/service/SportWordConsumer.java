@@ -22,12 +22,12 @@ import lombok.RequiredArgsConstructor;
 public class SportWordConsumer {
 
 	private final SportWordRepository sportWordRepository;
-	private static final String TOPIC = "sport_topic";
+	private static final String TOPIC = "sport-topic";
 	private static final ConcurrentMap<String, Integer> sportCountMap = new ConcurrentHashMap<>();
 
 	Logger logger = LoggerFactory.getLogger(SportWordConsumer.class);
 
-	@KafkaListener(topics = TOPIC, groupId = "keywordCount")
+	@KafkaListener(topics = TOPIC, groupId = "sportCount", concurrency = "3")
 	public void receiveMessage(String message) throws IOException {
 		sportCountMap.compute(message, (key, value) -> value == null ? 1 : value + 1);
 	}
@@ -38,19 +38,20 @@ public class SportWordConsumer {
 			String word = entry.getKey();
 			Integer count = entry.getValue();
 
-			Optional<SportWord> optionalSportWord = sportWordRepository.findByName(word);
+			Optional<SportWord> sportWord = sportWordRepository.findByName(word);
 
-			if (optionalSportWord.isPresent()) {
-				SportWord existingSportWord = optionalSportWord.get();
+			if (sportWord.isPresent()) {
+				SportWord existingSportWord = sportWord.get();
 				existingSportWord.updateCount(count);
 				sportWordRepository.save(existingSportWord);
+				logger.info("update sport-keyword: {}, count: {}", word, count);
 			} else {
 				SportWord newSportWord = SportWord.builder()
 					.name(word)
 					.count(count)
 					.build();
 				sportWordRepository.save(newSportWord);
-				logger.info("sport-keyworkd: {}", newSportWord);
+				logger.info("new sport-keyword: {}", word);
 			}
 		}
 		sportCountMap.clear();

@@ -42,7 +42,6 @@ public class KeywordProducer {
 
 	public void sendDonga() {
 		String yesterday = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-		System.out.println(path);
 		File csv = new File(path + "DongaNews" + yesterday + ".csv");
 		String line;
 		try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
