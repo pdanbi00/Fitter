@@ -23,7 +23,7 @@ public class KafkaProducer {
 	private final KafkaTemplate<String, String> kafkaJoongang;
 
 	private String currentPath = System.getProperty("user.dir");
-	private String path = currentPath.replace("Kafka Spring Server", "crawler\\NewsCrawlerServer\\output\\");
+	private String path = currentPath.replace("backend-data", "crawler\\news\\output\\");
 
 	public void sendMessage(String message) {
 		System.out.println(String.format("Producer message : %s \n", message));

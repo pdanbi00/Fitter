@@ -17,7 +17,7 @@ def get_news():
     page = 1
     news_list = []
     while True:
-        print("뉴스 목록 가져오는 중... - page : {}", page)
+        print("뉴스 목록 가져오는 중... - page :", page)
         url = f"https://www.donga.com/news/List?p={page}&prod=news&ymd={formatted_date}&m="
         rq = requests.get(url, headers=headers)
         soup = BeautifulSoup(rq.text, "html.parser")

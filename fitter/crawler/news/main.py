@@ -23,11 +23,6 @@ templates = Jinja2Templates(directory="templates")
 def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-@app.get("/error")
-def error(request: Request):
-    return templates.TemplateResponse("error.html", {"request": request})
-
-
 @app.get("/api/chosun")
 def chosun_crawler(request: Request):
     return templates.TemplateResponse("chosun.html", {"request": request})

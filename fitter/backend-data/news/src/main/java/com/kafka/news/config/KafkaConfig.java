@@ -6,13 +6,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
-public class KafkaConfig {
+public class KafkaTopicConfig {
 
 	@Bean
 	public NewTopic keyword() {
 		return TopicBuilder.name("keyword")
-			.partitions(4)
-			.replicas(1)
+			.partitions(3)
+			.replicas(2)
 			.build();
 	}
 }
+
+
