@@ -19,4 +19,10 @@ public class BoxServiceImpl implements BoxService {
 	public List<BoxDto> getBoxList() {
 		return boxRepository.findAll();
 	}
+
+	@Override
+	public boolean createBox(BoxDto boxDto) {
+		boxRepository.save(boxDto);
+		return true;
+	}
 }
