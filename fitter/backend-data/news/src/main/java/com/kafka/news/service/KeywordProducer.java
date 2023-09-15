@@ -7,14 +7,18 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class KafkaProducer {
+public class KeywordProducer {
 	private static final String TOPIC = "keyword";
 	private final KafkaTemplate<String, String> kafkaTemplate;
 	private final KafkaTemplate<String, String> kafkaDonga;
@@ -22,12 +26,18 @@ public class KafkaProducer {
 	private final KafkaTemplate<String, String> kafkaNaver;
 	private final KafkaTemplate<String, String> kafkaJoongang;
 
+	Logger logger = LoggerFactory.getLogger(KeywordProducer.class);
 	private String currentPath = System.getProperty("user.dir");
-	private String path = currentPath.replace("backend-data", "crawler\\news\\output\\");
+	private String path = currentPath.replace("backend-data\\news", "crawler\\news\\output\\");
 
 	public void sendMessage(String message) {
-		System.out.println(String.format("Producer message : %s \n", message));
-		this.kafkaTemplate.send(TOPIC, message);
+		ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(TOPIC, message);
+		future.addCallback(sCallback -> {
+			logger.info("Partition : {}, Offset : {}", sCallback.getRecordMetadata().partition(),
+														sCallback.getRecordMetadata().offset());
+		}, fCallback -> {
+			logger.error("error msg : {}", fCallback.getMessage());
+		});
 	}
 
 	public void sendDonga() {

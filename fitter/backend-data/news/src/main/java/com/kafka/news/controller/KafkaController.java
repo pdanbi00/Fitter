@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kafka.news.service.KafkaProducer;
+import com.kafka.news.service.KeywordProducer;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,22 +19,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class KafkaController {
 
-	private final KafkaProducer kafkaProducer;
+	private final KeywordProducer keywordProducer;
 
 	@PostMapping("/producer")
 	public void sendMessage(@RequestParam String message) {
-		kafkaProducer.sendMessage(message);
+		keywordProducer.sendMessage(message);
 	}
 
 	@PostMapping("/keyword")
 	public void sendKeyword() throws Exception {
 		ExecutorService executorService = Executors.newFixedThreadPool(4); // 병렬로 처리할 스레드 풀 생성
 
-		CompletableFuture<Void> chosunFuture = CompletableFuture.runAsync(kafkaProducer::sendChosun, executorService);
-		CompletableFuture<Void> dongaFuture = CompletableFuture.runAsync(kafkaProducer::sendDonga, executorService);
-		CompletableFuture<Void> joongangFuture = CompletableFuture.runAsync(kafkaProducer::sendJoongang,
+		CompletableFuture<Void> chosunFuture = CompletableFuture.runAsync(keywordProducer::sendChosun, executorService);
+		CompletableFuture<Void> dongaFuture = CompletableFuture.runAsync(keywordProducer::sendDonga, executorService);
+		CompletableFuture<Void> joongangFuture = CompletableFuture.runAsync(keywordProducer::sendJoongang,
 			executorService);
-		CompletableFuture<Void> naverFuture = CompletableFuture.runAsync(kafkaProducer::sendNaver, executorService);
+		CompletableFuture<Void> naverFuture = CompletableFuture.runAsync(keywordProducer::sendNaver, executorService);
 
 		// 모든 작업이 완료될 때까지 대기
 		CompletableFuture<Void> allOf = CompletableFuture.allOf(chosunFuture, dongaFuture, joongangFuture, naverFuture);

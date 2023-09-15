@@ -30,4 +30,9 @@ public class SportWord {
         this.name = name;
         this.count = count;
     }
+
+    // 스포츠 키워드 증가
+    public void updateCount(int newCount){
+        this.count += newCount;
+    }
 }
