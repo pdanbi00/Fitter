@@ -30,22 +30,22 @@ def chosun_crawler(request: Request):
 
 
 @app.get("/api/donga")
-def chosun_crawler(request: Request):
+def donga_crawler(request: Request):
     return templates.TemplateResponse("donga.html", {"request": request})
 
 
 @app.get("/api/joongang")
-def chosun_crawler(request: Request):
+def joongang_crawler(request: Request):
     return templates.TemplateResponse("joongang.html", {"request": request})
 
 
 @app.get("/api/naver")
-def chosun_crawler(request: Request):
+def naver_crawler(request: Request):
     return templates.TemplateResponse("naver.html", {"request": request})
 
-@app.get("/api/naverHealth")
-def chosun_crawler(request: Request):
-    return templates.TemplateResponse("naverHealth.html", {"request": request})
+@app.get("/api/naver-health")
+def naver_health_crawler(request: Request):
+    return templates.TemplateResponse("naver-health.html", {"request": request})
 
 
 @app.post("/api/chosun")
@@ -61,8 +61,8 @@ def donga_crawler():
 def naver_crawler():
     return asyncNaverNewsGeneralCrawler.start()
 
-@app.post("/api/naverHealth")
-def naver_crawler():
+@app.post("/api/naver-health")
+def naver_health_crawler():
     return asyncNaverNewsHealthCrawler.start()
 
 

@@ -73,6 +73,3 @@ def start():
     print("가져온 기사 :", len(news_list))
     print("완료")
     return news_list
-
-if __name__ == "__main__":
-    start()

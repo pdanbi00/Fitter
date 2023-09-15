@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>네이버 스포츠 크롤링</title>
+    <title>네이버 건강 크롤링</title>
 </head>
 <body>
     <div id="result">크롤링 진행중...</div>
@@ -10,7 +10,7 @@
 <script>
     async function crawler() {
         try {
-            const response = await fetch("/api/naverHealth", {
+            const response = await fetch("/api/naver-health", {
                 method: "POST"
             });
             if (response.ok) {
