@@ -9,4 +9,6 @@ public interface BoxService {
 	List<BoxDto> getBoxList();
 
 	boolean createBox(BoxDto boxDto);
+
+	boolean deleteBox(int boxId) throws Exception;
 }
