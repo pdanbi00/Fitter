@@ -62,7 +62,7 @@ def get_content(news):
     for element in newsContent.select(".sub_title"):
         element.extract()
 
-    content = newsContent.text.replace("\n", "").replace("\t", "").lstrip().rstrip()
+    content = newsContent.text.replace("\n", "").replace("\t", "").replace("\r", "").lstrip().rstrip()
     news["content"] = content
 
 
@@ -87,6 +87,6 @@ def start():
     save_to_csv(news_list)
     end_time = time.time()
     print("걸린시간 :", end_time - start_time)
-    print("가져온 기사 :", news_list.__sizeof__())
+    print("가져온 기사 :", len(news_list))
     print("완료")
     return news_list

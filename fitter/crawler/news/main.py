@@ -4,7 +4,8 @@ from starlette.middleware.cors import CORSMiddleware
 from crawler import (asyncDongaCrawler,
                      asyncChosunNewsCrawler,
                      asyncNaverNewsGeneralCrawler,
-                     asyncJoongangSportsNewsCrawler)
+                     asyncJoongangSportsNewsCrawler,
+                     asyncNaverNewsHealthCrawler)
 
 app = FastAPI()
 
@@ -42,6 +43,10 @@ def chosun_crawler(request: Request):
 def chosun_crawler(request: Request):
     return templates.TemplateResponse("naver.html", {"request": request})
 
+@app.get("/api/naverHealth")
+def chosun_crawler(request: Request):
+    return templates.TemplateResponse("naverHealth.html", {"request": request})
+
 
 @app.post("/api/chosun")
 def chosun_crawler():
@@ -55,6 +60,10 @@ def donga_crawler():
 @app.post("/api/naver")
 def naver_crawler():
     return asyncNaverNewsGeneralCrawler.start()
+
+@app.post("/api/naverHealth")
+def naver_crawler():
+    return asyncNaverNewsHealthCrawler.start()
 
 
 @app.post("/api/joongang")

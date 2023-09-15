@@ -10,4 +10,8 @@ import com.mk.fitter.api.box.repository.dto.BoxDto;
 @Repository
 public interface BoxRepository extends JpaRepository<BoxDto, Integer> {
 	List<BoxDto> findByBoxName(String name);
+
+	List<BoxDto> findAll();
+
+	boolean deleteById(int boxId);
 }
