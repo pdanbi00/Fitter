@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mk.fitter.api.common.service.JwtService;
+import com.mk.fitter.api.namedwod.repository.dto.WodCategoryDto;
 import com.mk.fitter.api.namedwod.repository.dto.WodDto;
 import com.mk.fitter.api.namedwod.repository.dto.WodRecordDto;
 import com.mk.fitter.api.namedwod.service.WodService;
@@ -31,6 +32,16 @@ public class WodController {
 
 	private final WodService wodService;
 	private final JwtService jwtService;
+
+	@GetMapping("/category")
+	public ResponseEntity<List<WodCategoryDto>> getWodCategory() {
+		try {
+			return new ResponseEntity<>(wodService.getWodCategory(), HttpStatus.OK);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 	@GetMapping("/list/{namedWodName}")
 	public ResponseEntity<List<WodRecordDto>> getNamedWodRecordList(@PathVariable String namedWodName) {
