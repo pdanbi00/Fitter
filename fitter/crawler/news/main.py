@@ -3,8 +3,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import date, timedelta
-import os
-import atexit
+import os, atexit, asyncio
 from crawler import (asyncDongaSportsNewsCrawler,
                      asyncDongaHealthNewsCrawler,
                      asyncChosunSportsNewsCrawler,
@@ -37,14 +36,14 @@ def sports_crawler(request: Request):
     return templates.TemplateResponse("sports.html", {"request": request})
 
 
-@app.post("/api/sports")
-async def sports_crawler(background_tasks: BackgroundTasks):
-    await start_sports_crawler(background_tasks)
-
-
 @app.get("/api/health")
 def health_crawler(request: Request):
     return templates.TemplateResponse("health.html", {"request": request})
+
+
+@app.post("/api/sports")
+async def sports_crawler(background_tasks: BackgroundTasks):
+    await start_sports_crawler(background_tasks)
 
 
 @app.post("/api/health")
@@ -66,7 +65,7 @@ async def start_health_crawler(background_tasks: BackgroundTasks):
     background_tasks.add_task(asyncDongaHealthNewsCrawler.start)
 
 
-def delete_old_files(): # 일주일 지난 크롤링 파일 삭제
+def delete_old_files():  # 일주일 지난 크롤링 파일 삭제
     output_dir_list = ["output/sports/", "output/health/"]
     today = date.today()
     formatted_date = str(today - timedelta(days=7)).replace("-", "")
@@ -78,8 +77,8 @@ def delete_old_files(): # 일주일 지난 크롤링 파일 삭제
 
 
 scheduler = BackgroundScheduler(timezone='Asia/Seoul')
-scheduler.add_job(start_sports_crawler, 'cron', hour=11, minute=50)
-scheduler.add_job(start_health_crawler, 'cron', hour=11, minute=50)
+scheduler.add_job(start_sports_crawler, 'cron', hour=11, minute=50, args=[BackgroundTasks()])
+scheduler.add_job(start_health_crawler, 'cron', hour=11, minute=50, args=[BackgroundTasks()])
 scheduler.add_job(delete_old_files, 'cron', day_of_week='sun', hour=0, minute=0)
 scheduler.start()
 

@@ -29,8 +29,9 @@ def get_news():
         for news in list:
             news_list.append(
                 {
-                    "title" : "",
+                    "title" : news.select_one("dt a").text,
                     # "url": news.select_one("dt a")["href"],
+                    "text" : news.select_one("dd .lede").text
                 }
             )
 
@@ -54,7 +55,7 @@ def save_to_csv(news_list):
     today = date.today()
     formatted_date = str(today).replace("-", "")
     formatted_date = int(formatted_date) - 1
-    output_file_name = f"output/health/NaverHealth{formatted_date}.csv"
+    output_file_name = f"output/health/NaverHealthNews{formatted_date}.csv"
     with open(output_file_name, "w", encoding="utf-8") as output_file:
         csvwriter = csv.writer(output_file, delimiter=";")
         csvwriter.writerow(news_list[0].keys())

@@ -82,7 +82,7 @@ def save_to_csv(news_list):
     today = date.today()
     formatted_date = str(today).replace("-", "")
     formatted_date = int(formatted_date) - 1
-    output_file_name = f"output/health/WeeklyChosunHealth{formatted_date}.csv"
+    output_file_name = f"output/health/ChosunHealth{formatted_date}.csv"
     with open(output_file_name, "w", encoding="utf-8") as output_file:
         csvwriter = csv.writer(output_file, delimiter=";")
         csvwriter.writerow(news_list[0].keys())
