@@ -27,7 +27,7 @@ public class UserController {
 	private final UserService userService;
 
 	@GetMapping("/userInfo")
-	public ResponseEntity<UserDto> getUserInfo(@RequestHeader String accessToken) {
+	public ResponseEntity<UserDto> getUserInfo(@RequestHeader(name = "Authorization") String accessToken) {
 		try {
 			return new ResponseEntity<>(userService.getUserInfo(accessToken), HttpStatus.OK);
 		} catch (Exception e) {
@@ -37,7 +37,7 @@ public class UserController {
 	}
 
 	@PutMapping("/box/{boxId}")
-	public ResponseEntity<UserDto> modifyBox(@PathVariable(name = "boxId") Integer boxId, @RequestHeader String accessToken) {
+	public ResponseEntity<UserDto> modifyBox(@PathVariable(name = "boxId") Integer boxId, @RequestHeader(name = "Authorization") String accessToken) {
 		try {
 			return new ResponseEntity<>(userService.modifyBox(boxId, accessToken), HttpStatus.OK);
 		} catch (Exception e) {
@@ -47,7 +47,7 @@ public class UserController {
 	}
 
 	@PutMapping("/email/{email}")
-	public ResponseEntity<UserDto> modifyEmail(@PathVariable(name = "email") String email, @RequestHeader String accessToken) {
+	public ResponseEntity<UserDto> modifyEmail(@PathVariable(name = "email") String email, @RequestHeader(name = "Authorization") String accessToken) {
 		try {
 			return new ResponseEntity<>(userService.modifyEmail(email, accessToken), HttpStatus.OK);
 		} catch (Exception e) {
@@ -57,7 +57,7 @@ public class UserController {
 	}
 
 	@PutMapping("/nickname/{nickname}")
-	public ResponseEntity<UserDto> modifyNickname(@PathVariable(name = "nickname") String nickname, @RequestHeader String accessToken) {
+	public ResponseEntity<UserDto> modifyNickname(@PathVariable(name = "nickname") String nickname, @RequestHeader(name = "Authorization") String accessToken) {
 		try {
 			return new ResponseEntity<>(userService.modifyNickname(nickname, accessToken), HttpStatus.OK);
 		} catch (Exception e) {
@@ -67,7 +67,7 @@ public class UserController {
 	}
 
 	@PutMapping("/age-range/{ageRange}")
-	public ResponseEntity<UserDto> modifyAgeRange(@PathVariable(name = "ageRange") String ageRange, @RequestHeader String accessToken) {
+	public ResponseEntity<UserDto> modifyAgeRange(@PathVariable(name = "ageRange") String ageRange, @RequestHeader(name = "Authorization") String accessToken) {
 		try {
 			return new ResponseEntity<>(userService.modifyAgeRange(ageRange, accessToken), HttpStatus.OK);
 		} catch (Exception e) {
@@ -77,7 +77,7 @@ public class UserController {
 	}
 
 	@PutMapping("/gender/{gender}")
-	public ResponseEntity<UserDto> modifyGender(@PathVariable(name = "gender") Boolean gender, @RequestHeader String accessToken) {
+	public ResponseEntity<UserDto> modifyGender(@PathVariable(name = "gender") Boolean gender, @RequestHeader(name = "Authorization") String accessToken) {
 		try {
 			return new ResponseEntity<>(userService.modifyGender(gender, accessToken), HttpStatus.OK);
 		} catch (Exception e) {
@@ -87,7 +87,7 @@ public class UserController {
 	}
 
 	@PutMapping("/birthday/{birthday}")
-	public ResponseEntity<UserDto> modifyBirthday(@PathVariable(name = "birthday")Date birthday, @RequestHeader String accessToken) {
+	public ResponseEntity<UserDto> modifyBirthday(@PathVariable(name = "birthday")Date birthday, @RequestHeader(name = "Authorization") String accessToken) {
 		try {
 			return new ResponseEntity<>(userService.modifyBirthday(birthday, accessToken), HttpStatus.OK);
 		} catch (Exception e) {
@@ -97,7 +97,7 @@ public class UserController {
 	}
 
 	@PutMapping("/is-trainder/{isTrainder}")
-	public ResponseEntity<UserDto> modifyIsTrainer(@PathVariable(name = "isTrainer")Boolean isTrainer, @RequestHeader String accessToken) {
+	public ResponseEntity<UserDto> modifyIsTrainer(@PathVariable(name = "isTrainer")Boolean isTrainer, @RequestHeader(name = "Authorization") String accessToken) {
 		try {
 			return new ResponseEntity<>(userService.modifyIsTrainer(isTrainer, accessToken), HttpStatus.OK);
 		} catch (Exception e) {
@@ -108,7 +108,7 @@ public class UserController {
 
 	// TODO : 카카오랑 연결 끊기 구현하기
 	@DeleteMapping
-	public ResponseEntity<String> deleteUser(@RequestHeader String accessToken) {
+	public ResponseEntity<String> deleteUser(@RequestHeader(name = "Authorization") String accessToken) {
 		try {
 			userService.deleteUser(accessToken);
 			return new ResponseEntity<>("UserController :: 사용자 삭제 성공", HttpStatus.OK);
