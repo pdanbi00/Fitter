@@ -16,20 +16,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "sport_word", indexes = {@Index(name = "idx_name", columnList = "name")})
-public class SportWord {
+public class SportsWord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sport_word_id")
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     private int count;
 
     @Builder
-    public SportWord(String name, int count){
+    public SportsWord(String name, int count){
         this.name = name;
         this.count = count;
     }

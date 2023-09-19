@@ -9,26 +9,25 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaConfig {
 
 	@Bean
-	public NewTopic keyword() {
-		return TopicBuilder.name("keyword")
+	public NewTopic testTopic() {
+		return TopicBuilder.name("test-topic")
 			.partitions(3)
-			.replicas(2)
+			.replicas(1)
 			.build();
 	}
-
 	@Bean
-	public NewTopic sportTopic() {
-		return TopicBuilder.name("sport_topic")
+	public NewTopic sportsTopic() {
+		return TopicBuilder.name("sports-topic")
 			.partitions(3)
-			.replicas(2)
+			.replicas(1)
 			.build();
 	}
 
 	@Bean
 	public NewTopic healthTopic() {
-		return TopicBuilder.name("health_topic")
+		return TopicBuilder.name("health-topic")
 			.partitions(3)
-			.replicas(2)
+			.replicas(1)
 			.build();
 	}
 }
