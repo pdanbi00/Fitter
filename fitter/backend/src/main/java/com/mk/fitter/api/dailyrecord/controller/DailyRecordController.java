@@ -22,6 +22,8 @@ import com.mk.fitter.api.common.service.JwtService;
 import com.mk.fitter.api.dailyrecord.repository.dto.DailyRecordDto;
 import com.mk.fitter.api.dailyrecord.service.DailyRecordService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,18 +31,17 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/calendar")
 @RequiredArgsConstructor
 @Slf4j
+@Api(tags = {"데일리 일지"})
 public class DailyRecordController {
 
 	private final DailyRecordService dailyRecordService;
 	private final JwtService jwtService;
 
 	@GetMapping("")
+	@ApiOperation(value = "일지 리스트 조회", notes = "yyyy-MM 특정 달의 일지를 모두 조회하는 API")
 	public ResponseEntity<List<DailyRecordDto>> getAllRecordsByMonth(@RequestParam String date,
 		@RequestHeader String Authorization) {
 		try {
-			/*
-			jwt 구현되면 accessToken으로 유저 정보 가져오기 구현
-			 */
 			Optional<Integer> UID = jwtService.extractUID(Authorization);
 			int userId = UID.get(); // 임시 값
 			String[] dateSplit = date.split("-");
@@ -57,6 +58,7 @@ public class DailyRecordController {
 	}
 
 	@PostMapping("/write")
+	@ApiOperation(value = "일지 리스트 작성", notes = "그날의 일지를 작성하는 API")
 	public ResponseEntity<Boolean> writeDailyRecord(@RequestHeader String Authorization,
 		@RequestBody DailyRecordDto dailyRecordDto) {
 		Optional<Integer> UID = jwtService.extractUID(Authorization);
@@ -71,6 +73,7 @@ public class DailyRecordController {
 	}
 
 	@GetMapping("/read/{date}")
+	@ApiOperation(value = "일지 리스트 조회", notes = "그날의 일지를 조회하는 API")
 	public ResponseEntity<DailyRecordDto> getDailyRecordByDate(@RequestHeader String Authorization,
 		@PathVariable LocalDate date) {
 		try {
@@ -84,6 +87,7 @@ public class DailyRecordController {
 	}
 
 	@PutMapping("/modify/{dailyRecordId}")
+	@ApiOperation(value = "일지 리스트 수정", notes = "그날의 일지를 수정하는 API")
 	public ResponseEntity<Boolean> modifyDailyRecord(@PathVariable int dailyRecordId,
 		@RequestBody Map<String, String> memo) {
 		try {
@@ -95,6 +99,7 @@ public class DailyRecordController {
 	}
 
 	@DeleteMapping("/delete/{dailyRecordId}")
+	@ApiOperation(value = "일지 리스트 삭제", notes = "그날의 일지를 삭제하는 API")
 	public ResponseEntity<Boolean> deleteDailyRecord(@PathVariable int dailyRecordId,
 		@RequestHeader String Authorization) {
 		boolean result;

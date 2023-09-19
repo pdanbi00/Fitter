@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 
 import com.mk.fitter.api.personalrecord.repository.PersonalRecordRepository;
 import com.mk.fitter.api.personalrecord.repository.WorkoutRepository;
+import com.mk.fitter.api.personalrecord.repository.WorkoutTypeRepository;
+import com.mk.fitter.api.personalrecord.repository.dto.PersonalRecordCreateRequest;
 import com.mk.fitter.api.personalrecord.repository.dto.PersonalRecordDto;
 import com.mk.fitter.api.personalrecord.repository.dto.WorkoutDto;
+import com.mk.fitter.api.personalrecord.repository.dto.WorkoutTypeDto;
 import com.mk.fitter.api.user.repository.UserRepository;
 import com.mk.fitter.api.user.repository.dto.UserDto;
 
@@ -22,6 +25,7 @@ public class PersonalRecordServiceImpl implements PersonalRecordService {
 	private final PersonalRecordRepository personalRecordRepository;
 	private final UserRepository userRepository;
 	private final WorkoutRepository workoutRepository;
+	private final WorkoutTypeRepository workoutTypeRepository;
 
 	@Override
 	public List<PersonalRecordDto> getRecordList(Integer userId) {
@@ -39,12 +43,12 @@ public class PersonalRecordServiceImpl implements PersonalRecordService {
 	}
 
 	@Override
-	public boolean creatRecord(Integer userId, HashMap<String, String> requestBody) throws Exception {
+	public boolean creatRecord(Integer userId, PersonalRecordCreateRequest requestBody) throws Exception {
 		Optional<UserDto> byId = userRepository.findById(userId);
 		if (byId.isEmpty()) {
 			throw new Exception("유저가 존재하지 않습니다.");
 		}
-		String workoutName = requestBody.get("workoutName");
+		String workoutName = requestBody.getWorkoutName();
 		Optional<WorkoutDto> findWorkout = workoutRepository.findByName(workoutName);
 		if (findWorkout.isEmpty()) {
 			throw new Exception("운동이 존재하지 않습니다.");
@@ -52,7 +56,7 @@ public class PersonalRecordServiceImpl implements PersonalRecordService {
 		PersonalRecordDto record = PersonalRecordDto.builder()
 			.userDto(byId.get())
 			.workoutDto(findWorkout.get())
-			.maxWeight(Integer.parseInt(requestBody.get("maxWeight")))
+			.maxWeight(requestBody.getMaxWeight())
 			.build();
 		PersonalRecordDto save = personalRecordRepository.save(record);
 		return true;
@@ -91,5 +95,21 @@ public class PersonalRecordServiceImpl implements PersonalRecordService {
 		}
 
 		return personalRecordRepository.deleteById(personalRecordId);
+	}
+
+	@Override
+	public List<WorkoutTypeDto> getWorkoutCategory() {
+		return workoutTypeRepository.findAll();
+	}
+
+	@Override
+	public List<WorkoutDto> getWorkoutList() {
+		return workoutRepository.findAll();
+	}
+
+	@Override
+	public List<PersonalRecordDto> getRankList(Integer userId) {
+
+		return personalRecordRepository.findRankByUserDto_Id(userId);
 	}
 }
