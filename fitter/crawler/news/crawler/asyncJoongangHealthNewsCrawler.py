@@ -20,7 +20,7 @@ def get_news():
     formatted_date = int(formatted_date) - 1
     page = 1
     while True:
-        url = f"https://www.joongang.co.kr/sports?page={page}"
+        url = f"https://www.joongang.co.kr/lifestyle/health?page={page}"
         rq = requests.get(url, headers=headers)
         soup = BeautifulSoup(rq.text, "html.parser")
         selectedList = soup.select("#story_list li")
@@ -71,11 +71,13 @@ def get_content(news):
 
 
 def save_to_csv(news_list):
+    if not news_list:
+        return
     print("csv 변환 중...")
     today = date.today()
     formatted_date = str(today).replace("-", "")
     formatted_date = int(formatted_date) - 1
-    output_file_name = f"output/sports/JoongangSportsNews{formatted_date}.csv"
+    output_file_name = f"output/health/JoongangHealthNews{formatted_date}.csv"
     with open(output_file_name, "w", encoding="utf-8") as output_file:
         csvwriter = csv.writer(output_file, delimiter=";")
         csvwriter.writerow(news_list[0].keys())

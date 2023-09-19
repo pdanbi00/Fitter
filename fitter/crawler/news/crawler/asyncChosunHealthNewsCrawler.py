@@ -19,7 +19,7 @@ def get_news():
     page = 1
     news_list = []
     while True:
-        url = f"https://weekly.chosun.com/news/articleList.html?page={page}"
+        url = f"https://weekly.chosun.com/news/articleList.html?page={page}&sc_section_code=S1N5"
         rq = requests.get(url, headers=headers)
         soup = BeautifulSoup(rq.text, "html.parser")
 
@@ -43,7 +43,8 @@ def get_news():
             news_list.append(
                 {
                     "title": temp.select_one(".titles a").text,
-                    "url": temp.select_one(".titles a")["href"],
+                    # "url": temp.select_one(".titles a")["href"],
+                    "text": temp.select_one(".lead a").text
                 }
             )
         page += 1
@@ -74,11 +75,14 @@ def get_content(news):
 
 
 def save_to_csv(news_list):
+    if not news_list:
+        print("뉴스 기사가 없습니다.")
+        return
     print("csv 변환 중...")
     today = date.today()
     formatted_date = str(today).replace("-", "")
     formatted_date = int(formatted_date) - 1
-    output_file_name = f"output/WeeklyChosun{formatted_date}.csv"
+    output_file_name = f"output/health/WeeklyChosunHealth{formatted_date}.csv"
     with open(output_file_name, "w", encoding="utf-8") as output_file:
         csvwriter = csv.writer(output_file, delimiter=";")
         csvwriter.writerow(news_list[0].keys())
@@ -96,4 +100,3 @@ def start():
     print("걸린시간 :", end_time - start_time)
     print("가져온 기사 :", len(news_list))
     print("완료")
-    return news_list

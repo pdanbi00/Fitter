@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>중앙일보 크롤링</title>
+    <title>건강 기사 크롤링</title>
 </head>
 <body>
     <div id="result">크롤링 진행중...</div>
@@ -10,17 +10,18 @@
 <script>
     async function crawler() {
         try {
-            const response = await fetch("/api/joongang", {
+            const response = await fetch("/api/health", {
                 method: "POST"
             });
             if (response.ok) {
-                const jsonData = await response.json();
-                const tag = document.getElementById("result");
-                tag.innerText = JSON.stringify(jsonData, null, 2); // JSON 데이터를 예쁘게 포맷팅하여 출력
+                alert("크롤링이 완료되었습니다!");
+                window.location.href = "/";
             } else {
-                console.error("서버로부터 응답을 받을 수 없습니다.");
+                alert("서버로부터 응답을 받을 수 없습니다.");
+                window.location.href = "/";
             }
         } catch (error) {
+             alert("오류 발생");
             console.error("오류 발생:", error);
         }
     }

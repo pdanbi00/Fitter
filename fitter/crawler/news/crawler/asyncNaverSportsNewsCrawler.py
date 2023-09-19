@@ -25,12 +25,12 @@ def get_news():
         for news in rq.json()["result"]["newsList"]:
             news_list.append(
                 {
-                    "oid": news["oid"],
-                    "aid": news["aid"],
                     "title": news["title"],
                     "subContent": news["subContent"],
-                    "thumbnail": news["thumbnail"],
-                    "dateTime": news["dateTime"],
+                    # "oid": news["oid"],
+                    # "aid": news["aid"],
+                    # "thumbnail": news["thumbnail"],
+                    # "dateTime": news["dateTime"],
                 }
             )
 
@@ -53,7 +53,7 @@ def save_to_csv(news_list):
     today = date.today()
     formatted_date = str(today).replace("-", "")
     formatted_date = int(formatted_date) - 1
-    output_file_name = f"output/NaverSportsGeneral{formatted_date}.csv"
+    output_file_name = f"output/sports/NaverSportsNews{formatted_date}.csv"
     with open(output_file_name, "w", encoding="utf-8") as output_file:
         csvwriter = csv.writer(output_file, delimiter=";")
         csvwriter.writerow(news_list[0].keys())
@@ -71,4 +71,3 @@ def start():
     print("걸린시간 :", end_time - start_time)
     print("가져온 기사 :", news_list.__sizeof__())
     print("완료")
-    return news_list
