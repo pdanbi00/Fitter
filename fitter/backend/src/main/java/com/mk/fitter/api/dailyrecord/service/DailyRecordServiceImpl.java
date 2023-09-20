@@ -32,6 +32,13 @@ public class DailyRecordServiceImpl implements DailyRecordService {
 	}
 
 	@Override
+	public List<DailyRecordDto> getAllRecordsByMonthForTest(LocalDate startDate, LocalDate endDate) {
+		List<DailyRecordDto> byUserIdAndDateMonth = dailyRecordRepository.findByDateBetween(
+			startDate, endDate);
+		return byUserIdAndDateMonth;
+	}
+
+	@Override
 	public boolean writeDailyRecord(DailyRecordDto dailyRecordDto, int userId) throws Exception {
 		//유저 정보 찾기 추가해야함
 		Optional<UserDto> byId = userRepository.findById(userId);
@@ -74,6 +81,7 @@ public class DailyRecordServiceImpl implements DailyRecordService {
 		if (byId.isPresent()) {
 			DailyRecordDto dailyRecordDto = byId.get();
 			dailyRecordDto.setMemo(memo.get("memo"));
+			dailyRecordRepository.save(dailyRecordDto);
 			return true;
 		} else {
 			throw new Exception("수정에 실패했습니다.");
