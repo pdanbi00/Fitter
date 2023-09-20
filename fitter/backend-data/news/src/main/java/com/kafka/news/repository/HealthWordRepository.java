@@ -10,5 +10,4 @@ import com.kafka.news.entity.HealthWord;
 @Repository
 public interface HealthWordRepository extends JpaRepository<HealthWord, Integer> {
 	Optional<HealthWord> findByName(String name);
-
 }

@@ -1,4 +1,4 @@
-INSERT INTO sport_word (name, count) VALUES
+INSERT INTO sports_word (name, count) VALUES
                                          ('골프', 0),
                                          ('근대5종', 0),
                                          ('농구', 0),

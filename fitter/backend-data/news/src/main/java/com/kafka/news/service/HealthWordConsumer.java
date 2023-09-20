@@ -1,6 +1,7 @@
 package com.kafka.news.service;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Service;
 import com.kafka.news.entity.HealthWord;
 import com.kafka.news.repository.HealthWordRepository;
 
+import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
+import kr.co.shineware.nlp.komoran.core.Komoran;
+import kr.co.shineware.nlp.komoran.model.KomoranResult;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -29,7 +33,13 @@ public class HealthWordConsumer {
 
 	@KafkaListener(topics = TOPIC, groupId = "health-keyword", concurrency = "3")
 	public void receiveMessage(String message) throws IOException {
-		healthCountMap.compute(message, (key, value) -> value == null ? 1 : value + 1);
+		Komoran komoran = new Komoran(DEFAULT_MODEL.LIGHT);
+		message = message.strip();
+		KomoranResult analyze = komoran.analyze(message);
+		List<String> nouns = analyze.getMorphesByTags("NNG", "NNP");
+		for(String noun : nouns) {
+			healthCountMap.compute(noun, (key, value) -> value == null ? 1 : value + 1);
+		}
 	}
 
 	@Scheduled(fixedDelay = 60000)

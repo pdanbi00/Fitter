@@ -15,12 +15,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "sport_word", indexes = {@Index(name = "idx_name", columnList = "name")})
+@Table(name = "sports_word", indexes = {@Index(name = "idx_name", columnList = "name")})
 public class SportsWord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "sport_word_id")
+    @Column(name = "sports_word_id")
     private Integer id;
 
     @Column(nullable = false, unique = true)

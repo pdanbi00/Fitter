@@ -12,10 +12,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.kafka.news.repository.HealthWordRepository;
 import com.kafka.news.repository.SportsWordRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -26,11 +30,17 @@ public class NewsWordProducer {
 
 	private final KafkaTemplate<String, String> kafkaSports;
 	private final KafkaTemplate<String, String> kafkaHealth;
+
+	private final HealthWordRepository healthWordRepository;
 	private final SportsWordRepository sportsWordRepository;
 	private final String currentPath = System.getProperty("user.dir");
 
+	Logger logger = LoggerFactory.getLogger(NewsWordProducer.class);
+
 	@Scheduled(cron = "0 0 12 * * ?") // 정오 자동 실행
+	@Transactional
 	public void sendNewsKeyword(){
+		healthWordRepository.deleteAll();
 		sportsWordRepository.resetCountToZero();
 		sendSportsWord(kafkaSports, "sports", "sports-topic");
 		sendHealthWord(kafkaHealth, "health", "health-topic");
@@ -92,6 +102,12 @@ public class NewsWordProducer {
 		String yesterday = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 		String path = currentPath.replace("backend-data\\news", "crawler\\news\\output\\" + type + "\\");
 		File csv = new File(path + newsName + yesterday + ".csv");
+
+		if (!csv.exists()){
+			logger.info("뉴스 파일이 존재하지 않습니다. {}", csv.getPath());
+			return;
+		}
+
 		try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
 			String line;
 			while ((line = br.readLine()) != null) {

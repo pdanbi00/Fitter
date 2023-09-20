@@ -45,10 +45,10 @@ public class SportsWordConsumer {
 		Komoran komoran = new Komoran(DEFAULT_MODEL.LIGHT);
 		message = message.strip();
 		KomoranResult analyze = komoran.analyze(message);
-		List<String> nouns = analyze.getNouns();
+		List<String> nouns = analyze.getMorphesByTags("NNG", "NNP");
 		for(String noun : nouns) {
 			if (isSportsKeyword(noun)) {
-				sportsCountMap.compute(message, (key, value) -> value == null ? 1 : value + 1);
+				sportsCountMap.compute(noun, (key, value) -> value == null ? 1 : value + 1);
 			}
 		}
 	}
