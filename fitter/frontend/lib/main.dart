@@ -21,13 +21,6 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      // home: AdditionalInfo(),
-      // home: AdditionalBox(
-      //     nickname: "nickname",
-      //     email: "email",
-      //     profileImagePath: "profileImagePath",
-      //     age: "age",
-      //     gender: "gender")
       home: LoginScreen(),
     );
   }
