@@ -40,7 +40,7 @@ class _AdditionalBoxState extends State<AdditionalBox> {
   late List<dynamic> boxList;
   List<String> boxLists = [];
 
-  Future onIsSign() async {
+  Future onCallServer() async {
 // HTTP 요청 보내기
     var url = Uri.parse('http://j9d202.p.ssafy.io:8000/api/box/list');
     var response = await http.get(url);
@@ -64,7 +64,7 @@ class _AdditionalBoxState extends State<AdditionalBox> {
   }
 
   Future onAll() async {
-    await onIsSign();
+    await onCallServer();
     await onMakeList();
   }
 
