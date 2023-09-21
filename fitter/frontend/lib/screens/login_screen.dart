@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -30,33 +29,33 @@ class LoginScreen extends StatelessWidget {
   //   }
   // }
 
-  Future onIsSign(OAuthToken token) async {
-    // 헤더에 추가할 데이터
-    Map<String, String> headers = {
-      'Authorization': token.accessToken,
-    };
+//   Future onIsSign(OAuthToken token) async {
+//     // 헤더에 추가할 데이터
+//     Map<String, String> headers = {
+//       'Authorization': token.accessToken,
+//     };
 
-// HTTP 요청 보내기
-    var url = Uri.parse('https://example.com/api/endpoint');
-    var response = await http.get(url, headers: headers);
+// // HTTP 요청 보내기
+//     var url = Uri.parse('https://example.com/api/endpoint');
+//     var response = await http.get(url, headers: headers);
 
-// 응답 처리
-    if (response.statusCode == 200) {
-      // 성공적으로 응답을 받았을 때의 처리
-      print('Response data: ${response.body}');
-    } else {
-      // 오류 처리
-      print('Request failed with status: ${response.statusCode}');
-      print('Error message: ${response.body}');
-    }
-  }
+// // 응답 처리
+//     if (response.statusCode == 200) {
+//       // 성공적으로 응답을 받았을 때의 처리
+//       print('Response data: ${response.body}');
+//     } else {
+//       // 오류 처리
+//       print('Request failed with status: ${response.statusCode}');
+//       print('Error message: ${response.body}');
+//     }
+//   }
 
   Future onLoginTap() async {
     if (await isKakaoTalkInstalled()) {
       try {
         OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
         print('카카오톡으로 로그인 성공');
-        onIsSign(token);
+        // onIsSign(token);
       } catch (error) {
         print('카카오톡으로 로그인 실패 $error');
 
@@ -69,7 +68,7 @@ class LoginScreen extends StatelessWidget {
         try {
           OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
           print('카카오톡으로 로그인 성공');
-          onIsSign(token);
+          // onIsSign(token);
         } catch (error) {
           print('카카오계정으로 로그인 실패 $error');
         }
@@ -77,8 +76,8 @@ class LoginScreen extends StatelessWidget {
     } else {
       try {
         OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
-        print('카카오톡으로 로그인 성공');
-        onIsSign(token);
+        print('카카오톡으로 로그인 성공 : ${token.accessToken}');
+        // onIsSign(token);
       } catch (error) {
         print('카카오계정으로 로그인 실패 $error');
       }

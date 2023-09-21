@@ -26,6 +26,13 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
         // home: AdditionalInfo(),
-        home: ChartScreen());
+        home: AdditionalBox(
+            nickname: "nickname",
+            email: "email",
+            profileImagePath: "profileImagePath",
+            age: "age",
+            gender: "gender")
+        // home: LoginScreen(),
+        );
   }
 }
