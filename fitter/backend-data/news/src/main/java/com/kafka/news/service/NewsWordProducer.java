@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -37,50 +40,42 @@ public class NewsWordProducer {
 
 	Logger logger = LoggerFactory.getLogger(NewsWordProducer.class);
 
-	@Scheduled(cron = "0 0 12 * * ?") // 정오 자동 실행
+	@Scheduled(cron = "0 10 0 * * ?") // 정오 자동 실행
 	@Transactional
 	public void sendNewsKeyword(){
 		healthWordRepository.deleteAll();
 		sportsWordRepository.resetCountToZero();
-		sendSportsWord(kafkaSports, "sports", "sports-topic");
-		sendHealthWord(kafkaHealth, "health", "health-topic");
+		sendSportsWord(kafkaSports);
+		sendHealthWord(kafkaHealth);
 	}
 
-	private void sendSportsWord(KafkaTemplate<String, String> kafkaTemplate, String type, String topic){
-		ExecutorService executorService = Executors.newFixedThreadPool(4); // 병렬로 처리할 스레드 풀 생성
-		CompletableFuture<Void> chosun = CompletableFuture.runAsync(() -> sendNewsData(kafkaTemplate,"NaverSportsNews", type, topic), executorService);
-		CompletableFuture<Void> donga = CompletableFuture.runAsync(() -> sendNewsData(kafkaTemplate,"JoongangSportsNews", type, topic), executorService);
-		CompletableFuture<Void> joongang = CompletableFuture.runAsync(() -> sendNewsData(kafkaTemplate,"DongaSportsNews", type, topic), executorService);
-		CompletableFuture<Void> naver = CompletableFuture.runAsync(() -> sendNewsData(kafkaTemplate,"ChosunSportsNews", type, topic), executorService);
+	private void sendSportsWord(KafkaTemplate<String, String> kafkaTemplate) {
+		List<String> sportsNewsNames = Arrays.asList("NaverSportsNews", "JoongangSportsNews",
+			"DongaSportsNews", "ChosunSportsNews");
 
-		// 모든 작업이 완료될 때까지 대기
-		CompletableFuture<Void> allOf = CompletableFuture.allOf(chosun, donga, joongang, naver);
+		sendNewsWords(kafkaTemplate, "sports", "sports-topic", sportsNewsNames);
+	}
 
-		try {
-			allOf.get(); // 모든 작업이 완료될 때까지 대기
-			executorService.shutdown(); // 스레드 풀 종료
-			if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) { // 최대 5초까지 스레드 풀 종료 기다림
-				executorService.shutdownNow(); // 시간 초과 시 강제 종료
-			}
-		} catch (InterruptedException | ExecutionException e) {
-			e.printStackTrace();
-			Thread.currentThread().interrupt(); // 인터럽트 상태 복원
-		} finally {
-			if (!executorService.isTerminated()) {
-				executorService.shutdownNow(); // 아직 완전히 종료되지 않았으면 강제 종료
-			}
+	private void sendHealthWord(KafkaTemplate<String, String> kafkaTemplate) {
+		List<String> healthNewsNames = Arrays.asList("ChosunHealthNews", "DongaHealthNews",
+			"JoongangHealthNews", "NaverHealthNews");
+
+		sendNewsWords(kafkaTemplate, "health", "health-topic",healthNewsNames);
+	}
+
+	private void sendNewsWords(KafkaTemplate<String, String> kafkaTemplate, String type, String topic,
+		List<String> newsNames) {
+		ExecutorService executorService = Executors.newFixedThreadPool(newsNames.size());
+		List<CompletableFuture<Void>> futures = new ArrayList<>();
+
+		for (String newsName : newsNames) {
+			CompletableFuture<Void> future = CompletableFuture.runAsync(() ->
+				sendNewsData(kafkaTemplate, newsName, type, topic), executorService);
+			futures.add(future);
 		}
-	}
-
-	private void sendHealthWord(KafkaTemplate<String, String> kafkaTemplate, String type, String topic){
-		ExecutorService executorService = Executors.newFixedThreadPool(4); // 병렬로 처리할 스레드 풀 생성
-		CompletableFuture<Void> chosun = CompletableFuture.runAsync(() -> sendNewsData(kafkaTemplate, "ChosunHealthNews", type, topic), executorService);
-		CompletableFuture<Void> donga = CompletableFuture.runAsync(() -> sendNewsData(kafkaTemplate, "DongaHealthNews", type, topic), executorService);
-		CompletableFuture<Void> joongang = CompletableFuture.runAsync(() -> sendNewsData(kafkaTemplate, "JoongangHealthNews", type, topic), executorService);
-		CompletableFuture<Void> naver = CompletableFuture.runAsync(() -> sendNewsData(kafkaTemplate, "NaverHealthNews", type, topic), executorService);
 
 		// 모든 작업이 완료될 때까지 대기
-		CompletableFuture<Void> allOf = CompletableFuture.allOf(chosun, donga, joongang, naver);
+		CompletableFuture<Void> allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
 
 		try {
 			allOf.get(); // 모든 작업이 완료될 때까지 대기
@@ -114,8 +109,8 @@ public class NewsWordProducer {
 				if (line.isEmpty())
 					continue;
 				String[] split = line.split(";");
-				for (String s : split) {
-					kafkaTemplate.send(topic, s);
+				if (split.length > 2) {
+					kafkaTemplate.send(topic, split[2]);
 				}
 			}
 		} catch (IOException e) {
