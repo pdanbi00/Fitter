@@ -27,6 +27,6 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
         // home: AdditionalInfo(),
-        home: Calendar()); // 랜더링될 페이지 코드 수정하기 AdditionalInfo()
+        home: AdditionalInfo()); // 랜더링될 페이지 코드 수정하기 AdditionalInfo()
   }
 }
