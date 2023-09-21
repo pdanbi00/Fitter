@@ -1,6 +1,5 @@
 package com.mk.fitter.api.common.oauth.service;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
@@ -12,7 +11,6 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import com.mk.fitter.api.common.oauth.Role;
 import com.mk.fitter.api.common.oauth.SocialType;
 import com.mk.fitter.api.common.oauth.VO.CustomOAuth2User;
 import com.mk.fitter.api.common.oauth.VO.OAuthAttributes;
@@ -25,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 	private final UserRepository userRepository;
 
 	private static final String KAKAO = "kakao";
