@@ -17,7 +17,7 @@ def get_news():
     page = 1
     news_list = []
     while True:
-        print("뉴스 목록 가져오는 중... - page :", page)
+        print("[동아] 뉴스 목록 가져오는 중... - page :", page)
         url = f"https://www.donga.com/news/Sports/List?p={page}&prod=news&ymd={formatted_date}&m="
         rq = requests.get(url, headers=headers)
         soup = BeautifulSoup(rq.text, "html.parser")
@@ -27,13 +27,12 @@ def get_news():
         for temp in selectedList:
             news_list.append(
                 {
+                    "url": temp.select_one(".tit a")["href"],
                     "title": temp.select_one(".tit a").text,
-                    # "url": temp.select_one(".tit a")["href"],
-                    "text": temp.select_one(".txt a").text
+
                 }
             )
         page += 20
-
     return news_list
 
 
@@ -68,7 +67,7 @@ def get_content(news):
 
 
 def save_to_csv(news_list):
-    print("csv 변환 중...")
+    print("[동아] csv 변환 중...")
     today = date.today()
     formatted_date = str(today).replace("-", "")
     formatted_date = int(formatted_date) - 1
@@ -82,11 +81,14 @@ def save_to_csv(news_list):
 def start():
     start_time = time.time()
     news_list = get_news()
-    print("본문 가져오는 중...")
+    if not news_list:
+        print('---------------동아 스포츠 뉴스 기사가 없습니다.--------------')
+        return
+    print("[동아] 본문 가져오는 중...")
     with concurrent.futures.ThreadPoolExecutor() as executor:
         executor.map(get_content, news_list)
     save_to_csv(news_list)
     end_time = time.time()
-    print("걸린시간 :", end_time - start_time)
-    print("가져온 기사 :", len(news_list))
-    print("완료")
+    print("[동아] 걸린시간 :", end_time - start_time)
+    print("[동아] 가져온 기사 :", len(news_list))
+    print('---------------동아 스포츠 뉴스 완료---------------')
