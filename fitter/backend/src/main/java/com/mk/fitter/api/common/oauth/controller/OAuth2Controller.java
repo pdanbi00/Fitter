@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mk.fitter.api.common.oauth.Role;
-import com.mk.fitter.api.common.oauth.service.CustomOAuth2UserService;
+import com.mk.fitter.api.common.oauth.VO.UserResponseVO;
 import com.mk.fitter.api.common.oauth.service.OAuth2Service;
 import com.mk.fitter.api.common.service.JwtService;
 import com.mk.fitter.api.user.repository.dto.UserDto;
@@ -39,7 +39,7 @@ public class OAuth2Controller {
 
 	@GetMapping("/kakao")
 	@ApiOperation(value = "카카오 로그인 api", notes = "카카오 로그인 api")
-	public ResponseEntity<String> kakaoCallback(
+	public ResponseEntity<UserResponseVO> kakaoCallback(
 		HttpServletRequest request, HttpServletResponse response,
 		@ApiParam(value = "카카오 token", required = true)
 		@RequestHeader(name = "Authorization") String kakaoToken) {
@@ -58,22 +58,26 @@ public class OAuth2Controller {
 			// 헤더에 access, refresh 추가
 			jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
 
-			// 헤더에 nickname, id 보냄
-			response.addHeader("id", String.valueOf(userDto.getId()));
-			response.addHeader("nickname", userDto.getNickname());
+			// responsebody에 nickname, id 보냄
+			UserResponseVO userResponseVO = UserResponseVO.builder()
+				.id(userDto.getId())
+				.nickname(userDto.getNickname())
+				.role(userDto.getRole())
+				.build();
 
-			return new ResponseEntity<>("login success!", HttpStatus.OK);
+			return new ResponseEntity<>(userResponseVO, HttpStatus.OK);
 		} catch (Exception e) {
 			log.info("소셜 로그인에 실패했습니다. 에러 메시지 : {}", e.getMessage());
-			return new ResponseEntity<>("login failed", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@ApiOperation(value = "회원가입 시 회원정보 저장", notes = "회원정보 저장")
 	@PostMapping("/user-info")
-	public ResponseEntity<UserDto> saveUserInfo(@ApiParam(value = "회원정보") @RequestBody UserDto userDto) {
+	public ResponseEntity<UserDto> saveUserInfo(@ApiParam(value = "회원정보") @RequestBody UserDto newUser) {
 		try {
-			UserDto user = userService.saveUserInfo(userDto);
+			newUser.setRole(Role.USER);
+			UserDto user = userService.saveUserInfo(newUser);
 			return new ResponseEntity<>(user, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error("saveUserInfo :: {}", e.getMessage());

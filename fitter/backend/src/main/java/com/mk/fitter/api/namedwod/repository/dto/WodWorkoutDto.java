@@ -1,4 +1,4 @@
-package com.mk.fitter.api.dailyrecord.repository.dto;
+package com.mk.fitter.api.namedwod.repository.dto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,26 +8,34 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.mk.fitter.api.personalrecord.repository.dto.WorkoutDto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "daily_record_detail")
 @Data
+@Entity(name = "wod_workout")
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class DailyRecordDetailDto {
+public class WodWorkoutDto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
 	@ManyToOne
-	@JoinColumn(name = "daily_record_id")
+	@JoinColumn(name = "wod_id")
 	@JsonBackReference
-	private DailyRecordDto dailyRecordDto;
+	private WodDto wodDto;
 
-	private String description;
+	@ManyToOne
+	@JoinColumn(name = "workout_id")
+	private WorkoutDto workoutDto;
+
+	private int weight;
+
+	private int count;
+
+	private double distance;
+
 }
