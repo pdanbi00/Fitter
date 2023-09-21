@@ -4,10 +4,6 @@ import 'package:fitter/screens/sign_up/additional_box.dart';
 import 'package:fitter/screens/sign_up/additional_info.dart';
 
 import 'package:flutter/material.dart';
-<<<<<<< Updated upstream
-
-void main() {
-=======
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
@@ -19,8 +15,6 @@ void main() async {
   KakaoSdk.init(
     nativeAppKey: "db6c538af12e033ffc7eb3bbb87fc646",
   );
-
->>>>>>> Stashed changes
   runApp(const App());
 }
 

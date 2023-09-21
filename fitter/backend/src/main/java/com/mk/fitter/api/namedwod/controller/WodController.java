@@ -16,10 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mk.fitter.api.common.service.JwtService;
+import com.mk.fitter.api.namedwod.repository.dto.WodCategoryDto;
 import com.mk.fitter.api.namedwod.repository.dto.WodDto;
 import com.mk.fitter.api.namedwod.repository.dto.WodRecordDto;
+import com.mk.fitter.api.namedwod.service.WodRecordService;
 import com.mk.fitter.api.namedwod.service.WodService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,15 +31,43 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/named-wod")
 @RequiredArgsConstructor
 @Slf4j
+@Api(tags = {"와드 API"})
 public class WodController {
 
 	private final WodService wodService;
+	private final WodRecordService wodRecordService;
 	private final JwtService jwtService;
 
-	@GetMapping("/list/{namedWodName}")
-	public ResponseEntity<List<WodRecordDto>> getNamedWodRecordList(@PathVariable String namedWodName) {
+	@GetMapping("/category")
+	@ApiOperation(value = "와드 카테고리", notes = "와드 카테고리를 조회하는 API")
+	public ResponseEntity<List<WodCategoryDto>> getWodCategory() {
 		try {
-			List<WodRecordDto> namedWodList = wodService.getNamedWodList(namedWodName);
+			return new ResponseEntity<>(wodService.getWodCategory(), HttpStatus.OK);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("/wod-record/list")
+	@ApiOperation(value = "와드 기록 목록 조회", notes = "네임드 와드들의 모든 기록을 조회하는 API")
+	public ResponseEntity<List<WodRecordDto>> getWodRecordList(@RequestHeader String Authorization) {
+		try {
+			Optional<Integer> UID = jwtService.extractUID(Authorization);
+			return new ResponseEntity<>(wodRecordService.getWodRecordList(UID.get()), HttpStatus.OK);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("/wod-record/list/{namedWodName}")
+	@ApiOperation(value = "네임드 와드 기록 리스트 조회", notes = "해당 네임드 와드의 기록들을 조회하는 API")
+	public ResponseEntity<List<WodRecordDto>> getNamedWodRecordList(@RequestHeader String Authorization,
+		@PathVariable String namedWodName) {
+		try {
+			Optional<Integer> UID = jwtService.extractUID(Authorization);
+			List<WodRecordDto> namedWodList = wodService.getNamedWodList(UID.get(), namedWodName);
 			return new ResponseEntity<>(namedWodList, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -45,8 +77,8 @@ public class WodController {
 	}
 
 	@GetMapping("/list")
+	@ApiOperation(value = "네임드 와드 리스트 조회", notes = "네임드 와드 목록을 조회하는 API")
 	public ResponseEntity<List<WodDto>> getWodList() {
-
 		try {
 			List<WodDto> wodRecordList = wodService.getWodList();
 			return new ResponseEntity<>(wodRecordList, HttpStatus.OK);
@@ -56,7 +88,8 @@ public class WodController {
 		}
 	}
 
-	@GetMapping("/read/{wodRecordId}")
+	@GetMapping("/wod-record/read/{wodRecordId}")
+	@ApiOperation(value = "단일 와드 기록 조회", notes = "특정 와드 기록을 조회하는 API")
 	public ResponseEntity<WodRecordDto> getWodRecord(@PathVariable int wodRecordId) {
 		try {
 			return new ResponseEntity<>(wodService.getWodRecord(wodRecordId), HttpStatus.OK);
@@ -66,7 +99,8 @@ public class WodController {
 		}
 	}
 
-	@PostMapping("/create")
+	@PostMapping("/wod-record/create")
+	@ApiOperation(value = "와드 기록 생성", notes = "와드 기록을 생성하는 API")
 	public ResponseEntity<Boolean> createWodRecord(@RequestHeader String Authorization,
 		@RequestBody WodRecordDto wodRecordDto) {
 		// 토큰값으로 유저 가져오거나, 프론트에서 유저 id 받아야 함
@@ -81,7 +115,9 @@ public class WodController {
 		}
 	}
 
-	@PutMapping("/modify/{wodRecordId}")
+	@PutMapping("/wod-record/modify/{wodRecordId}")
+	@ApiOperation(value = "와드 기록 수정", notes = "와드 기록을 수정하는 API")
+
 	public ResponseEntity<Boolean> modifyWodRecord(@RequestHeader String Authorization, @PathVariable int wodRecordId,
 		@RequestBody WodRecordDto time) {
 
@@ -95,7 +131,8 @@ public class WodController {
 		}
 	}
 
-	@DeleteMapping("/delete/{wodRecordId}")
+	@DeleteMapping("/wod-record/delete/{wodRecordId}")
+	@ApiOperation(value = "와드 기록 삭제", notes = "와드 기록을 삭제하는 API")
 	public ResponseEntity<Boolean> deleteWodRecord(@RequestHeader String Authorization, @PathVariable int wodRecordId) {
 		try {
 			Optional<Integer> UID = jwtService.extractUID(Authorization);

@@ -5,11 +5,6 @@
 // clang-format off
 
 #include "generated_plugin_registrant.h"
-
-<<<<<<< Updated upstream
-
-void RegisterPlugins(flutter::PluginRegistry* registry) {
-=======
 #include <file_selector_windows/file_selector_windows.h>
 #include <url_launcher_windows/url_launcher_windows.h>
 
@@ -18,5 +13,4 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("FileSelectorWindows"));
   UrlLauncherWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("UrlLauncherWindows"));
->>>>>>> Stashed changes
 }

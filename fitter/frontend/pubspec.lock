@@ -187,8 +187,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-<<<<<<< Updated upstream
-=======
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -282,7 +280,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.17.0"
->>>>>>> Stashed changes
   js:
     dependency: transitive
     description:
@@ -427,8 +424,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.3"
-<<<<<<< Updated upstream
-=======
   path_provider:
     dependency: "direct main"
     description:
@@ -565,7 +560,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.0"
->>>>>>> Stashed changes
   sky_engine:
     dependency: transitive
     description: flutter
@@ -603,6 +597,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
   syncfusion_flutter_charts:
@@ -629,7 +624,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.8"
->>>>>>> Stashed changes
   term_glyph:
     dependency: transitive
     description:
@@ -646,8 +640,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.0"
-<<<<<<< Updated upstream
-=======
   typed_data:
     dependency: transitive
     description:
@@ -720,7 +712,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.8"
->>>>>>> Stashed changes
   vector_math:
     dependency: transitive
     description:
@@ -779,3 +770,4 @@ packages:
     version: "1.0.3"
 sdks:
   dart: ">=3.1.0-163.1.beta <4.0.0"
+  flutter: ">=3.10.0"
