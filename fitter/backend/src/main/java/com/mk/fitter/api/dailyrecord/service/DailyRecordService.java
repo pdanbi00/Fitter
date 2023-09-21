@@ -9,6 +9,8 @@ import com.mk.fitter.api.dailyrecord.repository.dto.DailyRecordDto;
 public interface DailyRecordService {
 	List<DailyRecordDto> getAllRecordsByMonth(int userId, LocalDate startDate, LocalDate endDate);
 
+	List<DailyRecordDto> getAllRecordsByMonthForTest(LocalDate startDate, LocalDate endDate);
+
 	boolean writeDailyRecord(DailyRecordDto dailyRecordDto, int userId) throws Exception;
 
 	DailyRecordDto getDailyRecordByDate(LocalDate date, int userId);
@@ -16,4 +18,6 @@ public interface DailyRecordService {
 	boolean deleteDailyRecord(int dailyRecordId, int userId) throws Exception;
 
 	boolean modifyDailyRecord(int dailyRecordId, Map<String, String> memo) throws Exception;
+
+	boolean writeDailyRecordTest(DailyRecordDto dailyRecordDto) throws Exception;
 }

@@ -57,14 +57,44 @@ public class DailyRecordController {
 		}
 	}
 
+	@GetMapping("/test")
+	@ApiOperation(value = "일지 리스트 조회 테스트용", notes = "yyyy-MM 특정 달의 일지를 모두 조회하는 API")
+	public ResponseEntity<List<DailyRecordDto>> getAllRecordsByMonthForTest(@RequestParam String date) {
+		try {
+			String[] dateSplit = date.split("-");
+			LocalDate startDate = LocalDate.of(Integer.parseInt(dateSplit[0]), Integer.parseInt(dateSplit[1]), 1);
+			LocalDate endDate = startDate.plusMonths(1).minusDays(1);
+			System.out.println(startDate);
+			System.out.println(endDate);
+			List<DailyRecordDto> dailyRecordDtos = dailyRecordService.getAllRecordsByMonthForTest(startDate, endDate);
+			return new ResponseEntity<>(dailyRecordDtos, HttpStatus.OK);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	@PostMapping("/write")
-	@ApiOperation(value = "일지 리스트 작성", notes = "그날의 일지를 작성하는 API")
+	@ApiOperation(value = "일지 리스트 작성", notes = "그 날의 일지를 작성하는 API")
 	public ResponseEntity<Boolean> writeDailyRecord(@RequestHeader String Authorization,
 		@RequestBody DailyRecordDto dailyRecordDto) {
 		Optional<Integer> UID = jwtService.extractUID(Authorization);
 		boolean result = false;
 		try {
 			result = dailyRecordService.writeDailyRecord(dailyRecordDto, UID.get());
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@PostMapping("/test/write")
+	@ApiOperation(value = "일지 리스트 테스트 작성", notes = "그 날의 일지를 작성하는 테스트 API")
+	public ResponseEntity<Boolean> writeDailyRecordTest(@RequestBody DailyRecordDto dailyRecordDto) {
+		boolean result = false;
+		try {
+			result = dailyRecordService.writeDailyRecordTest(dailyRecordDto);
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage());

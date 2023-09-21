@@ -10,24 +10,19 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36"
 }
 
-news_list = []
-
-
-def get_news(tag):
-    print("뉴스 목록 가져오는 중...")
+def get_news():
+    print("[중앙] 뉴스 목록 가져오는 중...")
     today = date.today()
     formatted_date = str(today).replace("-", "")
     formatted_date = int(formatted_date) - 1
     page = 1
-    while True:
-        url = f"https://www.joongang.co.kr/{tag}?page={page}"
+    news_list = []
+    flag = True
+    while flag:
+        url = f"https://www.joongang.co.kr/sports?page={page}"
         rq = requests.get(url, headers=headers)
         soup = BeautifulSoup(rq.text, "html.parser")
         selectedList = soup.select("#story_list li")
-        if selectedList == []:
-            print("기사가 없습니다.")
-            break
-
         for temp in selectedList:
             newsDate = temp.select_one(".date").text
             newsDate = datetime.strptime(newsDate, "%Y.%m.%d %H:%M")
@@ -36,17 +31,18 @@ def get_news(tag):
             if newsDate > formatted_date:
                 continue
             if formatted_date > newsDate:
-                return
+                return news_list
 
-            title = temp.select_one(".headline a").text
-            title = title.replace("\n", "").replace("\t", "").replace("\r", "").lstrip().rstrip()
+            # title = title.replace("\n", "").replace("\t", "").replace("\r", "").lstrip().rstrip()
             news_list.append(
                 {
-                    "title": title,
                     "url": temp.select_one(".headline a")["href"],
+                    "title": temp.select_one(".headline a").text,
+
                 }
             )
         page += 1
+
 
 
 def get_content(news):
@@ -70,28 +66,29 @@ def get_content(news):
 
 
 def save_to_csv(news_list):
-    print("csv 변환 중...")
+    print("[중앙] csv 변환 중...")
     today = date.today()
     formatted_date = str(today).replace("-", "")
     formatted_date = int(formatted_date) - 1
-    output_file_name = f"output/JoongangSportsNews{formatted_date}.csv"
+    output_file_name = f"output/sports/JoongangSportsNews{formatted_date}.csv"
     with open(output_file_name, "w", encoding="utf-8") as output_file:
         csvwriter = csv.writer(output_file, delimiter=";")
         csvwriter.writerow(news_list[0].keys())
         for i in news_list:
             csvwriter.writerow(i.values())
 
+
 def start():
     start_time = time.time()
-    get_news("sports")
-    get_news("culture")
-    get_news("society")
-    print("본문 가져오는 중...")
+    news_list = get_news()
+    if not news_list:
+        print('---------------중앙 스포츠 뉴스 기사가 없습니다.--------------')
+        return
+    print("[중앙] 본문 가져오는 중...")
     with concurrent.futures.ThreadPoolExecutor() as executor:
         executor.map(get_content, news_list)
     save_to_csv(news_list)
     end_time = time.time()
-    print("걸린시간 :", end_time - start_time)
-    print("가져온 기사 :", len(news_list))
-    print("완료")
-    return news_list
+    print("[중앙] 걸린시간 :", end_time - start_time)
+    print("[중앙] 가져온 기사 :", len(news_list))
+    print('---------------중앙 스포츠 뉴스 완료---------------')
