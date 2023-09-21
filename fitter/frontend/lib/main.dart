@@ -1,6 +1,6 @@
 import 'package:fitter/screens/login_screen.dart';
 import 'package:fitter/screens/nav_bar.dart';
-
+import 'package:fitter/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
