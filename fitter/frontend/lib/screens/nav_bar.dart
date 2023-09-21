@@ -1,8 +1,5 @@
 import 'package:fitter/screens/login_screen.dart';
-import 'package:fitter/screens/sign_up/additional_box.dart';
 import 'package:fitter/screens/sign_up/additional_info.dart';
-import 'package:fitter/screens/sign_up/additional_privacy.dart';
-import 'package:fitter/screens/start_screen.dart';
 import 'package:flutter/material.dart';
 
 /// Flutter code sample for [BottomNavigationBar].
@@ -31,14 +28,12 @@ class BottomNavigationBarExample extends StatefulWidget {
 class _BottomNavigationBarExampleState
     extends State<BottomNavigationBarExample> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     LoginScreen(),
-    AdditionalBox(),
-    AdditionalPrivacy(),
+    LoginScreen(),
+    Calendar(),
     AdditionalInfo(),
-    AdditionalBox(),
+    LoginScreen(),
   ];
 
   void _onItemTapped(int index) {
