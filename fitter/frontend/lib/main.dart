@@ -26,6 +26,6 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
         // home: AdditionalInfo(),
-        home: AdditionalInfo());
+        home: ChartScreen());
   }
 }
