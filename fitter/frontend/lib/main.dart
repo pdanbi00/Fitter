@@ -1,5 +1,6 @@
 import 'package:fitter/screens/chart_screen.dart';
 import 'package:fitter/screens/login_screen.dart';
+import 'package:fitter/screens/nav_bar.dart';
 import 'package:fitter/screens/sign_up/additional_box.dart';
 import 'package:fitter/screens/sign_up/additional_info.dart';
 
@@ -25,6 +26,6 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
         // home: AdditionalInfo(),
-        home: ChartScreen());
+        home: AdditionalInfo());
   }
 }

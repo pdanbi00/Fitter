@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 
 /// Flutter code sample for [BottomNavigationBar].
 
-void main() => runApp(const BottomNavigationBarExampleApp());
+void main() => runApp(const NavBarWidget());
 
-class BottomNavigationBarExampleApp extends StatelessWidget {
-  const BottomNavigationBarExampleApp({super.key});
+class NavBarWidget extends StatelessWidget {
+  const NavBarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
