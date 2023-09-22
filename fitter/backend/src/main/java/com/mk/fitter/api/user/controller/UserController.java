@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,7 +36,7 @@ public class UserController {
 
 	private final UserServiceImpl userService;
 
-	@GetMapping("/userInfo")
+	@GetMapping("/user-info")
 	@ApiOperation(value = "유저 정보", notes = "유저 정보를 조회하는 API")
 	public ResponseEntity<UserDto> getUserInfo(@RequestHeader(name = "Authorization") String accessToken) {
 		try {
@@ -94,7 +96,7 @@ public class UserController {
 	}
 
 	@PutMapping("/gender/{gender}")
-	@ApiOperation(value = "유저 성별 수정", notes = "유저의 성별을 수정하는 API")
+	@ApiOperation(value = "유저 성별 수정", notes = "유저의 성별을 수정하는 API, 남성:true 여성:false")
 	public ResponseEntity<UserDto> modifyGender(@PathVariable(name = "gender") Boolean gender,
 		@RequestHeader(name = "Authorization") String accessToken) {
 		try {
@@ -129,10 +131,12 @@ public class UserController {
 		}
 	}
 
-	@PostMapping("/profile")
+	@PostMapping(path = "/profile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	@ApiOperation(value = "프로필 사진 수정", notes = "프로필 사진 수정하는 API")
-	public ResponseEntity<UserDto> saveUserProfileImg(@RequestParam("file") MultipartFile file, @RequestHeader(name = "Authorization") String accessToken) {
+	public ResponseEntity<UserDto> saveUserProfileImg(@RequestPart("file") MultipartFile file, @RequestHeader(name = "Authorization") String accessToken) {
 		try {
+			log.info("프로필 수정 컨트롤러 시작!");
+			log.info("파일 : {}", file);
 			UserDto userDto = userService.modifyUserProfileImg(file, accessToken);
 			return new ResponseEntity<>(userDto, HttpStatus.OK);
 		} catch (Exception e) {
