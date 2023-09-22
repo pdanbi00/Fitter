@@ -1,18 +1,19 @@
-import 'package:fitter/screens/calendar.dart';
+import 'package:fitter/screens/daily_calendar.dart';
 import 'package:fitter/screens/login_screen.dart';
+<<<<<<< HEAD
 import 'package:fitter/screens/record/record_screen.dart';
 import 'package:fitter/screens/sign_up/additional_box.dart';
+=======
+>>>>>>> 6690e90267e3a7917ec17a3d92312b06dff4a580
 import 'package:fitter/screens/sign_up/additional_info.dart';
-import 'package:fitter/screens/sign_up/additional_privacy.dart';
-import 'package:fitter/screens/start_screen.dart';
 import 'package:flutter/material.dart';
 
 /// Flutter code sample for [BottomNavigationBar].
 
-void main() => runApp(const BottomNavigationBarExampleApp());
+void main() => runApp(const NavBarWidget());
 
-class BottomNavigationBarExampleApp extends StatelessWidget {
-  const BottomNavigationBarExampleApp({super.key});
+class NavBarWidget extends StatelessWidget {
+  const NavBarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,14 +34,12 @@ class BottomNavigationBarExample extends StatefulWidget {
 class _BottomNavigationBarExampleState
     extends State<BottomNavigationBarExample> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
-    LoginScreen(),
-    RecordScreen(),
     Calendar(),
-    AdditionalInfo(),
-    AdditionalBox(),
+    Calendar(),
+    Calendar(),
+    Calendar(),
+    Calendar(),
   ];
 
   void _onItemTapped(int index) {
