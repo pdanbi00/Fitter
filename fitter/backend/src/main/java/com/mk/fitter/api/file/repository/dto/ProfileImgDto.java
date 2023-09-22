@@ -1,4 +1,4 @@
-package com.mk.fitter.api.user.repository.dto;
+package com.mk.fitter.api.file.repository.dto;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,4 +27,7 @@ public class ProfileImgDto {
 
 	@Column(name = "file_path")
 	private String filePath;
+
+	@Column(name = "original_file_name")
+	private String origName;
 }
