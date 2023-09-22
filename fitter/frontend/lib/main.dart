@@ -24,8 +24,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       // home: BottomNavigationBarExampleApp(),
-      // home: RecordScreen(),
-      home: LoginScreen(),
+      home: RecordScreen(),
+      // home: LoginScreen(),
     );
   }
 }

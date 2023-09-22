@@ -12,7 +12,7 @@ class PrRecordScreen extends StatefulWidget {
 class _PrRecordScreenState extends State<PrRecordScreen> {
   final ScrollController _scrollController = ScrollController();
 
-  List<String> prCategory = <String>[];
+  List<String> prCategory = [];
   List<dynamic> prLists = [];
 
   Future onCallServer() async {
@@ -25,6 +25,15 @@ class _PrRecordScreenState extends State<PrRecordScreen> {
       // 성공적으로 응답을 받았을 때의 처리
       print('Response data: ${response.body}');
       prLists = jsonDecode(response.body);
+      for (var prList in prLists) {
+        if (prList["type"] != "None") {
+          if (prList["type"] != "N/A") {
+            prCategory.add(prList['type'].toString());
+          }
+        }
+      }
+      print("최종 운동 목록 : ");
+      print(prCategory);
     } else {
       // 오류 처리
       print('Request failed with status: ${response.statusCode}');
@@ -33,15 +42,8 @@ class _PrRecordScreenState extends State<PrRecordScreen> {
   }
 
   Future onMakeList() async {
-    for (var prList in prLists) {
-      if (prList["type"] != "None") {
-        if (prList["type"] != "N/A") {
-          prCategory.add(prList['type'].toString());
-        }
-      }
-    }
-    print("최종 운동 목록 : ");
-    print(prCategory);
+    dropdownValue = prCategory.first;
+    print("dropdownValue :$dropdownValue ");
   }
 
   Future onAll() async {
@@ -50,8 +52,19 @@ class _PrRecordScreenState extends State<PrRecordScreen> {
     print('데이터 받기 완료');
   }
 
+  List<String> prList = <String>[
+    'Cleans',
+    'Deadlifts',
+    'Jerks',
+    'Olympic Lifts',
+    'Presses',
+    'Squats',
+    'Snatches',
+    'Other'
+  ];
+
   // DropdownButton에서 선택된 요소를 저장하는 변수
-  String selectedPR = 'Abdominal';
+  String selectedPR = 'Cleans';
 
   String dropdownValue = '';
 
@@ -167,9 +180,12 @@ class _PrRecordScreenState extends State<PrRecordScreen> {
     super.initState();
     // print("스택 오버플로우 : $categoryList");
     print("위쪽 테스트");
+    // onCallServer();
+
     onAll();
     print("아래쪽 테스트");
-    dropdownValue = prCategory.first;
+    print(prCategory);
+
     print("드롭다운 선택 된거 : $dropdownValue");
     // print(dropdownValue);
     // prLists = ApiService.getPrList(dropdownValue);
@@ -177,6 +193,7 @@ class _PrRecordScreenState extends State<PrRecordScreen> {
     // print(prLists);
     // _fetchPrCategories();
 
+    // dropdownValue = prList.first;
     currentList = Cleans;
   }
 
@@ -196,131 +213,131 @@ class _PrRecordScreenState extends State<PrRecordScreen> {
     setState(() {
       selectedPR = newValue;
       // prLists = ApiService.getPrList(dropdownValue);
-      _scrollController.jumpTo(0.0);
+      // _scrollController.jumpTo(0.0);
       // 선택된 항목에 따라 다른 리스트를 보여줍니다.
-      // if (selectedPR == 'Cleans') {
-      //   currentList = Cleans;
-      //   _scrollController.jumpTo(0.0); // 스크롤 제일 위로 올리는거
-      // } else if (selectedPR == 'Deadlifts') {
-      //   currentList = Deadlifts;
-      //   _scrollController.jumpTo(0.0); // 스크롤 제일 위로 올리는거
-      // } else if (selectedPR == 'Jerks') {
-      //   currentList = Jerks;
-      //   _scrollController.jumpTo(0.0); // 스크롤 제일 위로 올리는거
-      // } else if (selectedPR == 'Olympic Lifts') {
-      //   currentList = OlympicLifts;
-      //   _scrollController.jumpTo(0.0); // 스크롤 제일 위로 올리는거
-      // } else if (selectedPR == 'Presses') {
-      //   currentList = Presses;
-      //   _scrollController.jumpTo(0.0); // 스크롤 제일 위로 올리는거
-      // } else if (selectedPR == 'Squats') {
-      //   currentList = Squats;
-      //   _scrollController.jumpTo(0.0); // 스크롤 제일 위로 올리는거
-      // } else if (selectedPR == 'Snatches') {
-      //   currentList = Snatches;
-      //   _scrollController.jumpTo(0.0); // 스크롤 제일 위로 올리는거
-      // } else if (selectedPR == 'Other') {
-      //   currentList = Other;
-      //   _scrollController.jumpTo(0.0); // 스크롤 제일 위로 올리는거
-      // }
+      if (selectedPR == 'Cleans') {
+        currentList = Cleans;
+        _scrollController.jumpTo(0.0); // 스크롤 제일 위로 올리는거
+      } else if (selectedPR == 'Deadlifts') {
+        currentList = Deadlifts;
+        _scrollController.jumpTo(0.0); // 스크롤 제일 위로 올리는거
+      } else if (selectedPR == 'Jerks') {
+        currentList = Jerks;
+        _scrollController.jumpTo(0.0); // 스크롤 제일 위로 올리는거
+      } else if (selectedPR == 'Olympic Lifts') {
+        currentList = OlympicLifts;
+        _scrollController.jumpTo(0.0); // 스크롤 제일 위로 올리는거
+      } else if (selectedPR == 'Presses') {
+        currentList = Presses;
+        _scrollController.jumpTo(0.0); // 스크롤 제일 위로 올리는거
+      } else if (selectedPR == 'Squats') {
+        currentList = Squats;
+        _scrollController.jumpTo(0.0); // 스크롤 제일 위로 올리는거
+      } else if (selectedPR == 'Snatches') {
+        currentList = Snatches;
+        _scrollController.jumpTo(0.0); // 스크롤 제일 위로 올리는거
+      } else if (selectedPR == 'Other') {
+        currentList = Other;
+        _scrollController.jumpTo(0.0); // 스크롤 제일 위로 올리는거
+      }
     });
   }
 
   // final Future<List<PrRecordModel>> prRecords;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Column(
         children: [
-          // const Text('pr 레코드'),
-          const SizedBox(
+          Text('pr 레코드'),
+          SizedBox(
             height: 30,
           ),
           // Dropdown Button
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Container(
-                decoration: BoxDecoration(
-                  border:
-                      Border.all(color: Colors.blue), // 선택되지 않았을 때 테두리 선 색상 설정
-                  borderRadius:
-                      BorderRadius.circular(5), // 선택되지 않았을 때 버튼 모서리 둥글게 설정
-                ),
-                child: DropdownMenu<String>(
-                  width: 190,
-                  textStyle: const TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 20), // dropbdown 되기 전에 보여지는 글자 두께
-                  initialSelection: prCategory.first,
-                  onSelected: (String? value) {
-                    // This is called when the user selects an item.
-                    setState(() {
-                      dropdownValue = value!;
-                    });
-                    onDropdownChanged(dropdownValue);
-                  },
-                  dropdownMenuEntries:
-                      prCategory.map<DropdownMenuEntry<String>>((String value) {
-                    return DropdownMenuEntry<String>(
-                      value: value,
-                      label: value,
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Expanded(
-            child: ListView.separated(
-              controller: _scrollController, // ScrollController를 ListView에 연결.
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              itemCount: currentList.length,
-              itemBuilder: (BuildContext context, int index) {
-                var prRecord = currentList[index];
-                return Container(
-                    height: 60,
-                    color: const Color(0XFFEEF1F4),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: SizedBox(
-                              width: 100,
-                              child: Text(
-                                prRecord["workout"],
-                                textAlign: TextAlign.left,
-                              ),
-                            ),
-                          ),
-                          // const SizedBox(width: 50),
-                          Expanded(
-                              child: Text(
-                            prRecord["max_weight"] + 'lb',
-                            textAlign: TextAlign.center,
-                          )),
-                          // const Expanded(
-                          const Icon(Icons.chevron_right_rounded,
-                              color: Colors.black),
-                          // ),
-                          const SizedBox(width: 10),
-                        ],
-                      ),
-                    ));
-              },
-              separatorBuilder: (BuildContext context, int index) =>
-                  const Divider(),
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
+          // Align(
+          //   alignment: Alignment.centerLeft,
+          //   child: Padding(
+          //     padding: const EdgeInsets.only(left: 20),
+          //     child: Container(
+          //       decoration: BoxDecoration(
+          //         border:
+          //             Border.all(color: Colors.blue), // 선택되지 않았을 때 테두리 선 색상 설정
+          //         borderRadius:
+          //             BorderRadius.circular(5), // 선택되지 않았을 때 버튼 모서리 둥글게 설정
+          //       ),
+          //       child: DropdownMenu<String>(
+          //         width: 190,
+          //         textStyle: const TextStyle(
+          //             fontWeight: FontWeight.w900,
+          //             fontSize: 20), // dropbdown 되기 전에 보여지는 글자 두께
+          //         initialSelection: prCategory.first,
+          //         onSelected: (String? value) {
+          //           // This is called when the user selects an item.
+          //           setState(() {
+          //             dropdownValue = value!;
+          //           });
+          //           onDropdownChanged(dropdownValue);
+          //         },
+          //         dropdownMenuEntries:
+          //             prCategory.map<DropdownMenuEntry<String>>((String value) {
+          //           return DropdownMenuEntry<String>(
+          //             value: value,
+          //             label: value,
+          //           );
+          //         }).toList(),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // const SizedBox(
+          //   height: 10,
+          // ),
+          // Expanded(
+          //   child: ListView.separated(
+          //     controller: _scrollController, // ScrollController를 ListView에 연결.
+          //     padding: const EdgeInsets.symmetric(horizontal: 20),
+          //     itemCount: currentList.length,
+          //     itemBuilder: (BuildContext context, int index) {
+          //       var prRecord = currentList[index];
+          //       return Container(
+          //           height: 60,
+          //           color: const Color(0XFFEEF1F4),
+          //           child: Center(
+          //             child: Row(
+          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //               children: [
+          //                 const SizedBox(width: 10),
+          //                 Expanded(
+          //                   child: SizedBox(
+          //                     width: 100,
+          //                     child: Text(
+          //                       prRecord["workout"],
+          //                       textAlign: TextAlign.left,
+          //                     ),
+          //                   ),
+          //                 ),
+          //                 // const SizedBox(width: 50),
+          //                 Expanded(
+          //                     child: Text(
+          //                   prRecord["max_weight"] + 'lb',
+          //                   textAlign: TextAlign.center,
+          //                 )),
+          //                 // const Expanded(
+          //                 const Icon(Icons.chevron_right_rounded,
+          //                     color: Colors.black),
+          //                 // ),
+          //                 const SizedBox(width: 10),
+          //               ],
+          //             ),
+          //           ));
+          //     },
+          //     separatorBuilder: (BuildContext context, int index) =>
+          //         const Divider(),
+          //   ),
+          // ),
+          // const SizedBox(
+          //   height: 15,
+          // ),
         ],
       ),
     );

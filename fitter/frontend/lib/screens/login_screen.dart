@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:fitter/screens/calendar.dart';
+// import 'package:fitter/screens/calendar.dart';
 import 'package:fitter/screens/nav_bar.dart';
 import 'package:fitter/screens/sign_up/additional_info.dart';
 import 'package:fitter/widgets/empty_box.dart';
