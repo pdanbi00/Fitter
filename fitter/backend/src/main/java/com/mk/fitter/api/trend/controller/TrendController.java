@@ -44,7 +44,7 @@ public class TrendController {
 
 	// 건강 뉴스 조회
 	@GetMapping("/health/search")
-	@ApiOperation(value = "건강 키워드 뉴스", notes = "지정된 건강 키워드의 뉴스 3개 조회")
+	@ApiOperation(value = "건강 키워드 뉴스", notes = "지정된 건강 키워드의 뉴스 5개 조회")
 	public ResponseEntity<List<HealthNewsDto>> getHealthNews(@RequestParam String keyword){
 		List<HealthNewsDto> responseDto = trendService.getHealthNews(keyword);
 		return new ResponseEntity<>(responseDto, HttpStatus.OK);
