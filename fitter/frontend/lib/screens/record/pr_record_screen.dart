@@ -12,8 +12,11 @@ class PrRecordScreen extends StatefulWidget {
 class _PrRecordScreenState extends State<PrRecordScreen> {
   final ScrollController _scrollController = ScrollController();
 
+// 실제 사용할 pr 대분류
   List<String> prCategory = [];
-  List<dynamic> prLists = [];
+
+  // get 요청결과를 받기 위한 변수
+  List<dynamic> prDategoryLists = [];
 
   Future onCallServer() async {
     // HTTP 요청 보내기
@@ -24,8 +27,8 @@ class _PrRecordScreenState extends State<PrRecordScreen> {
     if (response.statusCode == 200) {
       // 성공적으로 응답을 받았을 때의 처리
       print('Response data: ${response.body}');
-      prLists = jsonDecode(response.body);
-      for (var prList in prLists) {
+      prDategoryLists = jsonDecode(response.body);
+      for (var prList in prDategoryLists) {
         if (prList["type"] != "None") {
           if (prList["type"] != "N/A") {
             prCategory.add(prList['type'].toString());
@@ -49,6 +52,7 @@ class _PrRecordScreenState extends State<PrRecordScreen> {
   Future onAll() async {
     await onCallServer();
     await onMakeList();
+    setState(() {});
     print('데이터 받기 완료');
   }
 
@@ -246,98 +250,98 @@ class _PrRecordScreenState extends State<PrRecordScreen> {
   // final Future<List<PrRecordModel>> prRecords;
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Column(
         children: [
-          Text('pr 레코드'),
-          SizedBox(
+          const Text('pr 레코드'),
+          const SizedBox(
             height: 30,
           ),
           // Dropdown Button
-          // Align(
-          //   alignment: Alignment.centerLeft,
-          //   child: Padding(
-          //     padding: const EdgeInsets.only(left: 20),
-          //     child: Container(
-          //       decoration: BoxDecoration(
-          //         border:
-          //             Border.all(color: Colors.blue), // 선택되지 않았을 때 테두리 선 색상 설정
-          //         borderRadius:
-          //             BorderRadius.circular(5), // 선택되지 않았을 때 버튼 모서리 둥글게 설정
-          //       ),
-          //       child: DropdownMenu<String>(
-          //         width: 190,
-          //         textStyle: const TextStyle(
-          //             fontWeight: FontWeight.w900,
-          //             fontSize: 20), // dropbdown 되기 전에 보여지는 글자 두께
-          //         initialSelection: prCategory.first,
-          //         onSelected: (String? value) {
-          //           // This is called when the user selects an item.
-          //           setState(() {
-          //             dropdownValue = value!;
-          //           });
-          //           onDropdownChanged(dropdownValue);
-          //         },
-          //         dropdownMenuEntries:
-          //             prCategory.map<DropdownMenuEntry<String>>((String value) {
-          //           return DropdownMenuEntry<String>(
-          //             value: value,
-          //             label: value,
-          //           );
-          //         }).toList(),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // const SizedBox(
-          //   height: 10,
-          // ),
-          // Expanded(
-          //   child: ListView.separated(
-          //     controller: _scrollController, // ScrollController를 ListView에 연결.
-          //     padding: const EdgeInsets.symmetric(horizontal: 20),
-          //     itemCount: currentList.length,
-          //     itemBuilder: (BuildContext context, int index) {
-          //       var prRecord = currentList[index];
-          //       return Container(
-          //           height: 60,
-          //           color: const Color(0XFFEEF1F4),
-          //           child: Center(
-          //             child: Row(
-          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //               children: [
-          //                 const SizedBox(width: 10),
-          //                 Expanded(
-          //                   child: SizedBox(
-          //                     width: 100,
-          //                     child: Text(
-          //                       prRecord["workout"],
-          //                       textAlign: TextAlign.left,
-          //                     ),
-          //                   ),
-          //                 ),
-          //                 // const SizedBox(width: 50),
-          //                 Expanded(
-          //                     child: Text(
-          //                   prRecord["max_weight"] + 'lb',
-          //                   textAlign: TextAlign.center,
-          //                 )),
-          //                 // const Expanded(
-          //                 const Icon(Icons.chevron_right_rounded,
-          //                     color: Colors.black),
-          //                 // ),
-          //                 const SizedBox(width: 10),
-          //               ],
-          //             ),
-          //           ));
-          //     },
-          //     separatorBuilder: (BuildContext context, int index) =>
-          //         const Divider(),
-          //   ),
-          // ),
-          // const SizedBox(
-          //   height: 15,
-          // ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  border:
+                      Border.all(color: Colors.blue), // 선택되지 않았을 때 테두리 선 색상 설정
+                  borderRadius:
+                      BorderRadius.circular(5), // 선택되지 않았을 때 버튼 모서리 둥글게 설정
+                ),
+                child: DropdownMenu<String>(
+                  width: 190,
+                  textStyle: const TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 20), // dropbdown 되기 전에 보여지는 글자 두께
+                  initialSelection: prCategory.first,
+                  onSelected: (String? value) {
+                    // This is called when the user selects an item.
+                    setState(() {
+                      dropdownValue = value!;
+                    });
+                    onDropdownChanged(dropdownValue);
+                  },
+                  dropdownMenuEntries:
+                      prCategory.map<DropdownMenuEntry<String>>((String value) {
+                    return DropdownMenuEntry<String>(
+                      value: value,
+                      label: value,
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            child: ListView.separated(
+              controller: _scrollController, // ScrollController를 ListView에 연결.
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: currentList.length,
+              itemBuilder: (BuildContext context, int index) {
+                var prRecord = currentList[index];
+                return Container(
+                    height: 60,
+                    color: const Color(0XFFEEF1F4),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: SizedBox(
+                              width: 100,
+                              child: Text(
+                                prRecord["workout"],
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          ),
+                          // const SizedBox(width: 50),
+                          Expanded(
+                              child: Text(
+                            prRecord["max_weight"] + 'lb',
+                            textAlign: TextAlign.center,
+                          )),
+                          // const Expanded(
+                          const Icon(Icons.chevron_right_rounded,
+                              color: Colors.black),
+                          // ),
+                          const SizedBox(width: 10),
+                        ],
+                      ),
+                    ));
+              },
+              separatorBuilder: (BuildContext context, int index) =>
+                  const Divider(),
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
         ],
       ),
     );

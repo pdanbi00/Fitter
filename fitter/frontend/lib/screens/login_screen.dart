@@ -44,8 +44,8 @@ class _LoginScreenState extends State<LoginScreen> {
     // }
   }
 
+  // 카카오 토큰 백엔드로 전달
   Future onIsSign(OAuthToken token) async {
-    // 헤더에 추가할 데이터
     Map<String, String> headers = {
       'Authorization': token.accessToken,
     };
@@ -63,11 +63,13 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+// 로그인 이후 페이지 넘김 처리
   Future onSetInfo(response) async {
     // var responsebody = jsonDecode(response.body);
     Map<String, dynamic> responseBody = jsonDecode(response.body);
 
     prefs.setString("Authorization", response.headers['authorization']);
+    print("access token : ${response.headers['authorization']}");
     prefs.setString(
         "Authorization-refresh", response.headers['authorization-refresh']);
 
