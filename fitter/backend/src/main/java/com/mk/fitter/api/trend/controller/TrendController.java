@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mk.fitter.api.trend.dto.HealthNewsDto;
 import com.mk.fitter.api.trend.dto.HealthWordDto;
 import com.mk.fitter.api.trend.dto.SportsWordDto;
 import com.mk.fitter.api.trend.service.TrendService;
@@ -42,10 +43,10 @@ public class TrendController {
 	}
 
 	// 건강 뉴스 조회
-	@GetMapping("/")
+	@GetMapping("/health/search")
 	@ApiOperation(value = "건강 키워드 뉴스", notes = "지정된 건강 키워드의 뉴스 3개 조회")
-	public ResponseEntity<String> getHealthNews(@RequestParam String keyword){
-		String responseDto = trendService.getHealthNews(keyword);
+	public ResponseEntity<List<HealthNewsDto>> getHealthNews(@RequestParam String keyword){
+		List<HealthNewsDto> responseDto = trendService.getHealthNews(keyword);
 		return new ResponseEntity<>(responseDto, HttpStatus.OK);
 	}
 

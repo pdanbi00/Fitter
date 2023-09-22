@@ -1,5 +1,6 @@
 package com.mk.fitter.api.trend.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -7,8 +8,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class HealthNewsDto {
 
-	private String name;
-	private String content;
-	private String imageUrl;
+	private String title;
+	private String link;
 
+	@Builder
+	public HealthNewsDto(String title, String link){
+		this.title = title;
+		this.link = link;
+	}
 }
