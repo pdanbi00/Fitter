@@ -1,31 +1,36 @@
 package com.mk.fitter.api.user.controller;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mk.fitter.api.user.repository.dto.UserDto;
-import com.mk.fitter.api.user.service.UserService;
+import com.mk.fitter.api.user.service.UserServiceImpl;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,9 +41,9 @@ import lombok.extern.slf4j.Slf4j;
 @Api(tags = {"유저 API"})
 public class UserController {
 
-	private final UserService userService;
+	private final UserServiceImpl userService;
 
-	@GetMapping("/userInfo")
+	@GetMapping("/user-info")
 	@ApiOperation(value = "유저 정보", notes = "유저 정보를 조회하는 API")
 	public ResponseEntity<UserDto> getUserInfo(@RequestHeader(name = "Authorization") String accessToken) {
 		try {
@@ -61,6 +66,18 @@ public class UserController {
 		}
 	}
 
+	@PostMapping("/email/duplicate")
+	@ApiOperation(value = "유저 이메일 중복체크", notes = "유저 이메일 중복체크 API")
+	public ResponseEntity<Boolean> checkDupEmail(@ApiParam(value = "유저 이메일") @RequestBody Map<String, String> emailMap,
+		@ApiParam(value = "access token") @RequestHeader(name = "Authorization") String accessToken) {
+		try {
+			return new ResponseEntity<>(userService.checkDupEmail(emailMap.get("email"), accessToken), HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("checkDupEmail :: {}", e.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	@PutMapping("/email")
 	@ApiOperation(value = "유저 이메일 수정", notes = "유저의 이메일을 수정하는 API")
 	public ResponseEntity<UserDto> modifyEmail(@RequestBody Map<String, String> emailMap,
@@ -68,7 +85,21 @@ public class UserController {
 		try {
 			return new ResponseEntity<>(userService.modifyEmail(emailMap.get("email"), accessToken), HttpStatus.OK);
 		} catch (Exception e) {
-			log.error("modifyEmail :: {}",e.getMessage());
+			log.error("modifyEmail :: {}", e.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@PostMapping("/nickname/duplicate")
+	@ApiOperation(value = "유저 닉네임 중복 체크", notes = "유저 닉네임 중복 체크하는 API")
+	public ResponseEntity<Boolean> checkDupNickname(
+		@ApiParam(value = "유저 닉네임") @RequestBody Map<String, String> nicknameMap,
+		@ApiParam(value = "access token") @RequestHeader(name = "Authorization") String accessToken) {
+		try {
+			return new ResponseEntity<>(userService.checkDupNickname(nicknameMap.get("nickname"), accessToken),
+				HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("checkDupNickname :: {}", e.getMessage());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -78,9 +109,10 @@ public class UserController {
 	public ResponseEntity<UserDto> modifyNickname(@RequestBody Map<String, String> nicknameMap,
 		@RequestHeader(name = "Authorization") String accessToken) {
 		try {
-			return new ResponseEntity<>(userService.modifyNickname(nicknameMap.get("nickname"), accessToken), HttpStatus.OK);
+			return new ResponseEntity<>(userService.modifyNickname(nicknameMap.get("nickname"), accessToken),
+				HttpStatus.OK);
 		} catch (Exception e) {
-			log.error("modifyNickname :: {}",e.getMessage());
+			log.error("modifyNickname :: {}", e.getMessage());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -98,7 +130,7 @@ public class UserController {
 	}
 
 	@PutMapping("/gender/{gender}")
-	@ApiOperation(value = "유저 성별 수정", notes = "유저의 성별을 수정하는 API")
+	@ApiOperation(value = "유저 성별 수정", notes = "유저의 성별을 수정하는 API, 남성:true 여성:false")
 	public ResponseEntity<UserDto> modifyGender(@PathVariable(name = "gender") Boolean gender,
 		@RequestHeader(name = "Authorization") String accessToken) {
 		try {
@@ -133,7 +165,33 @@ public class UserController {
 		}
 	}
 
-	// TODO : 카카오랑 연결 끊기 구현하기
+	@PostMapping(path = "/profile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	@ApiOperation(value = "프로필 사진 수정", notes = "프로필 사진 수정하는 API")
+	public ResponseEntity<UserDto> saveUserProfileImg(@RequestPart("file") MultipartFile file,
+		@RequestHeader(name = "Authorization") String accessToken) {
+		try {
+			log.info("프로필 수정 컨트롤러 시작!");
+			log.info("파일 : {}", file);
+			UserDto userDto = userService.modifyUserProfileImg(file, accessToken);
+			return new ResponseEntity<>(userDto, HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("userProfileImg :: {}", e.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@DeleteMapping("/profile")
+	@ApiOperation(value = "프로필 사진 삭제", notes = "프로필 사진 삭제하는 API")
+	public ResponseEntity<UserDto> deleteUserProfileImg(@RequestHeader(name = "Authorization") String accessToken) {
+		try {
+			UserDto userDto = userService.deleteUserprofileImg(accessToken);
+			return new ResponseEntity<>(userDto, HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("deleteUserProfileImg :: {}", e.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	@DeleteMapping
 	@ApiOperation(value = "유저 탈퇴", notes = "회원탈퇴를 하는 API")
 	public ResponseEntity<String> deleteUser(@RequestHeader(name = "Authorization") String accessToken) {
