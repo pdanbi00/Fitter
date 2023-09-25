@@ -1,19 +1,28 @@
 package com.mk.fitter.api.common.oauth.controller;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mk.fitter.api.common.oauth.Role;
 import com.mk.fitter.api.common.oauth.VO.UserResponseVO;
 import com.mk.fitter.api.common.oauth.service.OAuth2Service;
@@ -27,6 +36,7 @@ import com.mk.fitter.api.user.service.UserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.models.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,7 +53,7 @@ public class OAuth2Controller {
 	private final JwtService jwtService;
 	private final String BEARER = "Bearer ";
 
-	@GetMapping("/kakao")
+	@GetMapping(value = "/kakao", produces="application/json;charset=UTF-8")
 	@ApiOperation(value = "카카오 로그인 api", notes = "카카오 로그인 api")
 	public ResponseEntity<UserResponseVO> kakaoCallback(
 		HttpServletRequest request, HttpServletResponse response,
@@ -79,13 +89,41 @@ public class OAuth2Controller {
 	}
 
 	@ApiOperation(value = "회원가입 시 회원정보 저장", notes = "회원정보 저장")
-	@PostMapping("/user-info")
-	public ResponseEntity<UserDto> saveUserInfo(@ApiParam(value = "프로필사진") @RequestParam MultipartFile file, @ApiParam(value = "회원정보") @RequestBody UserDto user) {
+	@PostMapping(path = "/user-info", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public ResponseEntity<UserDto> saveUserInfo(@ApiParam(value = "프로필사진") @RequestPart(name = "file", required = false) MultipartFile file, @ApiParam(value = "회원정보") @RequestPart(name = "user") UserResponseVO user) {
 		try {
 			UserDto newUser = userService.saveUserInfo(user, file);
 			return new ResponseEntity<>(newUser, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error("saveUserInfo :: {}", e.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@ApiOperation(value = "닉네임 중복체크", notes = "닉네임 중복체크 API")
+	@PostMapping("/nickname/duplicate")
+	public ResponseEntity<Boolean> checkDupNickname(@ApiParam(name = "닉네임, id") @RequestBody Map<String, Object> nicknameMap) {
+		try {
+			int id = (Integer)nicknameMap.get("id");
+			String nickname = (String)nicknameMap.get("nickname");
+
+			return new ResponseEntity<>(userService.checkDupNickname(nickname, id), HttpStatus.OK);
+		} catch (Exception e){
+			log.error("checkDupNickname :: {}", e.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@ApiOperation(value = "이메일 중복체크", notes = "이메일 중복체크 API")
+	@PostMapping("/email/duplicate")
+	public ResponseEntity<Boolean> checkDupEmail(@ApiParam(name = "이메일, id") @RequestBody Map<String, Object> emailMap) {
+		try {
+			int id = (Integer)emailMap.get("id");
+			String email = (String)emailMap.get("email");
+
+			return new ResponseEntity<>(userService.checkDupEmail(email, id), HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("checkDupEmail :: {}", e.getMessage());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
