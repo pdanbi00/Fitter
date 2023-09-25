@@ -2,6 +2,7 @@ package com.mk.fitter.api.personalrecord.service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -57,6 +58,7 @@ public class PersonalRecordServiceImpl implements PersonalRecordService {
 			.userDto(byId.get())
 			.workoutDto(findWorkout.get())
 			.maxWeight(requestBody.getMaxWeight())
+			.createDate(requestBody.getCreateDate())
 			.build();
 		PersonalRecordDto save = personalRecordRepository.save(record);
 		return true;
@@ -110,8 +112,7 @@ public class PersonalRecordServiceImpl implements PersonalRecordService {
 	}
 
 	@Override
-	public List<PersonalRecordDto> getRankList(Integer userId) {
-
+	public List<Map<String, String>> getRankList(Integer userId) {
 		return personalRecordRepository.findRankByUserDto_Id(userId);
 	}
 
