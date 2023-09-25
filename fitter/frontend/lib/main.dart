@@ -25,8 +25,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       // home: BottomNavigationBarExampleApp(),
-      home: LoginScreen(),
-      // home: ChartScreen(workoutName: "Clean"),
+      // home: LoginScreen(),
+      home: ChartScreen(workoutName: "Kettlebell Sumo Deadlift High Pull"),
       // home: RecordScreen(),
       // home: DailyKeyword(),
     );
