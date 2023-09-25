@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:fitter/model/rm_detail.dart';
 import 'package:fitter/screens/pr_input_screen.dart';
-import 'package:fitter/widgets/button_mold.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -22,7 +21,10 @@ class _ChartScreenState extends State<ChartScreen> {
   @override
   void initState() {
     super.initState();
-    allSet();
+    setAll();
+    // setState(() {
+    //   oneRM = callServer();
+    // });
   }
 
   bool showChartLabel = false;
@@ -56,7 +58,18 @@ class _ChartScreenState extends State<ChartScreen> {
     throw Error();
   }
 
-  Future<void> makeListAsync(List<RMDetailModel> data) async {
+  // Future<void> makeListAsync(List<RMDetailModel> data) async {
+  //   setState(() {
+  //     for (int index = 0; index < data.length; index++) {
+  //       chartData.add(ChartData(
+  //         DateTime.parse(data[index].createDate),
+  //         data[index].maxWeight.toDouble(),
+  //       ));
+  //     }
+  //   });
+  // }
+
+  void makeListAsync(List<RMDetailModel> data) async {
     setState(() {
       for (int index = 0; index < data.length; index++) {
         chartData.add(ChartData(
@@ -67,11 +80,11 @@ class _ChartScreenState extends State<ChartScreen> {
     });
   }
 
-  Future allSet() async {
-    List<RMDetailModel> data = await callServer();
+  Future setAll() async {
     setState(() {
       oneRM = callServer();
     });
+    List<RMDetailModel> data = await callServer();
     makeListAsync(data);
   }
 
@@ -95,14 +108,14 @@ class _ChartScreenState extends State<ChartScreen> {
                 children: [
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           widget.workoutName,
                           style: const TextStyle(
-                              fontWeight: FontWeight.w900, fontSize: 25),
+                              fontWeight: FontWeight.w900, fontSize: 20),
                         ),
                         const SizedBox(
                           width: 20,

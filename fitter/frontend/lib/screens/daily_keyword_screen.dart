@@ -1,10 +1,62 @@
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:fitter/model/keywords.dart';
 import 'package:flutter/material.dart';
 import 'package:card_slider/card_slider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
-class DailyKeyword extends StatelessWidget {
+class DailyKeyword extends StatefulWidget {
   const DailyKeyword({super.key});
+
+  @override
+  State<DailyKeyword> createState() => _DailyKeywordState();
+}
+
+class _DailyKeywordState extends State<DailyKeyword> {
+  late SharedPreferences prefs;
+  late List<String> keywords;
+
+  @override
+  void initState() {
+    super.initState();
+    setAll();
+  }
+
+  Future callServer() async {
+    prefs = await SharedPreferences.getInstance();
+    final accessToken = prefs.getString('Authorization');
+
+    Map<String, String> headers = {
+      'Authorization': accessToken.toString(),
+    };
+
+    var url = Uri.parse('http://j9d202.p.ssafy.io:8000/api/trend/health');
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      print('Response data: ${response.body}');
+      final List<dynamic> rowKeywords = jsonDecode(response.body);
+      return rowKeywords;
+    }
+    throw Error();
+  }
+
+  List<String> makeList(rowKeywords) {
+    List<String> kewords = [];
+    for (var rowKeyword in rowKeywords) {
+      kewords.add(rowKeyword['name'].toString());
+    }
+    return kewords;
+  }
+
+  Future setAll() async {
+    List<dynamic> data = await callServer();
+    setState(() {
+      keywords = makeList(data);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +157,7 @@ class DailyKeyword extends StatelessWidget {
                                   // 버튼이라서~
                                 },
                                 child: Text(
-                                  '뉴스키워드 $i',
+                                  keywords[i],
                                   style:
                                       const TextStyle(color: Color(0xff0080ff)),
                                 ),

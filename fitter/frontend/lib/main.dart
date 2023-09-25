@@ -24,11 +24,12 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      // home: BottomNavigationBarExampleApp(),
       // home: LoginScreen(),
-      home: ChartScreen(workoutName: "Kettlebell Sumo Deadlift High Pull"),
+      // 데이터 없는 화면 테스트
+      // home: ChartScreen(workoutName: "Kettlebell Sumo Deadlift High Pull"),
+      // home: ChartScreen(workoutName: "Clean"),
       // home: RecordScreen(),
-      // home: DailyKeyword(),
+      home: DailyKeyword(),
     );
   }
 }
