@@ -1,10 +1,35 @@
 import 'dart:convert';
 
 import 'package:fitter/models/month_daily_record.dart';
+import 'package:fitter/models/user_profile.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
   static const String baseUrl = "http://j9d202.p.ssafy.io:8000";
+
+  static Future<String> getUserProfile(token) async {
+    final url = Uri.parse("$baseUrl/api/user/user-info");
+    final response = await http.get(
+      url,
+      headers: {
+        "Authorization": token,
+      },
+    );
+    // jsonDecode(utf8.decode(response.body));
+    return "";
+  }
+
+  static Future<String> resign(String token) async {
+    const api = "$baseUrl/api/user";
+    final url = Uri.parse(api);
+    final response = await http.delete(
+      url,
+      headers: {
+        "Authorization": token,
+      },
+    );
+    return response.body;
+  }
 
   void getDailyRecords() async {
     const String api = "api/calendar/test";
