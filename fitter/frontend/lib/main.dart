@@ -1,3 +1,4 @@
+import 'package:fitter/screens/daily/daily_calendar.dart';
 import 'package:fitter/screens/login_screen.dart';
 import 'package:fitter/screens/nav_bar.dart';
 import 'package:fitter/screens/record/record_screen.dart';
@@ -25,7 +26,7 @@ class App extends StatelessWidget {
     return const MaterialApp(
       // home: BottomNavigationBarExampleApp(),
       // home: RecordScreen(),
-      home: LoginScreen(),
+      home: Calendar(),
     );
   }
 }
