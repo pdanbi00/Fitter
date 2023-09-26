@@ -22,9 +22,6 @@ class _ChartScreenState extends State<ChartScreen> {
   void initState() {
     super.initState();
     setAll();
-    // setState(() {
-    //   oneRM = callServer();
-    // });
   }
 
   bool showChartLabel = false;

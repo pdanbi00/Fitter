@@ -2,6 +2,8 @@ import 'package:fitter/screens/chart_screen.dart';
 import 'package:fitter/screens/login_screen.dart';
 import 'package:fitter/screens/pr_input_screen.dart';
 import 'package:fitter/screens/daily_keyword_screen.dart';
+import 'package:fitter/screens/wod/wod_detail_screen.dart';
+import 'package:fitter/screens/wod/wod_input_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -24,7 +26,8 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: LoginScreen(),
+      // home: WodDetailScreen(wodName: "Murph", type: "For Time", wodId: "1"),
+      home: WodInputScreen(wodName: "Murph", type: "For Time", wodId: "1"),
       // 데이터 없는 화면 테스트
       // home: ChartScreen(workoutName: "Kettlebell Sumo Deadlift High Pull"),
       // home: ChartScreen(workoutName: "Clean"),
