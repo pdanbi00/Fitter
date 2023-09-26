@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:fitter/model/rm_detail.dart';
+import 'package:fitter/models/rm_detail.dart';
 import 'package:fitter/screens/pr_input_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
