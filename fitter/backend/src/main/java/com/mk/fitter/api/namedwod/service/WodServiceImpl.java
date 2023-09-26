@@ -29,13 +29,19 @@ public class WodServiceImpl implements WodService {
 	@Override
 	public List<WodRecordDto> getNamedWodList(int userId, String namedWodName) {
 		WodDto byName = wodRepository.findByName(namedWodName);
-		List<WodRecordDto> byWodId = wodRecordRepository.findByWod_IdAndUser_Id(userId, byName.getId());
+		List<WodRecordDto> byWodId = wodRecordRepository.findByWod_IdAndUser_IdOrderByCreateDateDesc(userId,
+			byName.getId());
 		return byWodId;
 	}
 
 	@Override
 	public List<WodCategoryDto> getWodCategory() {
 		return wodCategoryRepository.findAll();
+	}
+
+	@Override
+	public List<WodDto> getWodListByCategory(String category) {
+		return wodRepository.findByWodCategoryDto_Category(category);
 	}
 
 	public boolean createWodRecord(WodRecordDto wodRecordDto, int userId) throws Exception {

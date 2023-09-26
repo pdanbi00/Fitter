@@ -49,6 +49,18 @@ public class WodController {
 		}
 	}
 
+	@GetMapping("/list/{category}")
+	@ApiOperation(value = "해당 카테고리 와드 리스트", notes = "해당 카테고리(Girls, Hero)의 와드 목록을 조회하는 API")
+	public ResponseEntity<List<WodDto>> getWodListByCategory(@PathVariable String category) {
+		try {
+			return new ResponseEntity<>(wodService.getWodListByCategory(category), HttpStatus.OK);
+
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	@GetMapping("/wod-record/list")
 	@ApiOperation(value = "와드 기록 목록 조회", notes = "네임드 와드들의 모든 기록을 조회하는 API")
 	public ResponseEntity<List<WodRecordDto>> getWodRecordList(@RequestHeader String Authorization) {
@@ -68,6 +80,19 @@ public class WodController {
 		try {
 			Optional<Integer> UID = jwtService.extractUID(Authorization);
 			List<WodRecordDto> namedWodList = wodService.getNamedWodList(UID.get(), namedWodName);
+			return new ResponseEntity<>(namedWodList, HttpStatus.OK);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+
+	@GetMapping("/wod-record/list/test/{namedWodName}")
+	@ApiOperation(value = "네임드 와드 기록 리스트 조회", notes = "해당 네임드 와드의 기록들을 조회하는 API")
+	public ResponseEntity<List<WodRecordDto>> getNamedWodRecordListTest(@PathVariable String namedWodName) {
+		try {
+			List<WodRecordDto> namedWodList = wodService.getNamedWodList(28, namedWodName);
 			return new ResponseEntity<>(namedWodList, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage());
