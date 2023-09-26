@@ -2,6 +2,8 @@ package com.mk.fitter.api.file.repository.dto;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import lombok.AllArgsConstructor;
@@ -20,6 +22,7 @@ import lombok.ToString;
 @Builder
 public class ProfileImgDto {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
 	@Column(name = "file_name")
@@ -27,4 +30,7 @@ public class ProfileImgDto {
 
 	@Column(name = "file_path")
 	private String filePath;
+
+	@Column(name = "original_file_name")
+	private String origName;
 }

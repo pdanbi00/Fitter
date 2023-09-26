@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 
+// import 'package:fitter/screens/calendar.dart';
 import 'package:fitter/screens/nav_bar.dart';
 import 'package:fitter/screens/sign_up/additional_info.dart';
 import 'package:fitter/widgets/empty_box.dart';
@@ -31,9 +31,10 @@ class _LoginScreenState extends State<LoginScreen> {
   // 이 사람이 로그인 되어있는지 확인하는 함수!
   Future initPrefs() async {
     prefs = await SharedPreferences.getInstance();
-    final userID = prefs.getInt('userID');
-    // if (userID != null) {
+    final authorization = prefs.getString('Authorization');
+    // if (authorization != null) {
     //   // 이러면 그냥 바로 이 화면 안 띄우고 메인으로 넘어가면 됨... 되려나?
+    //   print("authorization : $authorization");
     //   Future.delayed(Duration.zero, () {
     //     Navigator.push(
     //       context,
@@ -43,8 +44,8 @@ class _LoginScreenState extends State<LoginScreen> {
     // }
   }
 
+  // 카카오 토큰 백엔드로 전달
   Future onIsSign(OAuthToken token) async {
-    // 헤더에 추가할 데이터
     Map<String, String> headers = {
       'Authorization': token.accessToken,
     };
@@ -62,11 +63,13 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+// 로그인 이후 페이지 넘김 처리
   Future onSetInfo(response) async {
     // var responsebody = jsonDecode(response.body);
     Map<String, dynamic> responseBody = jsonDecode(response.body);
 
     prefs.setString("Authorization", response.headers['authorization']);
+    print("access token : ${response.headers['authorization']}");
     prefs.setString(
         "Authorization-refresh", response.headers['authorization-refresh']);
 
