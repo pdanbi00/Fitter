@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mk.fitter.api.common.service.JwtService;
 import com.mk.fitter.api.namedwod.repository.dto.WodCategoryDto;
 import com.mk.fitter.api.namedwod.repository.dto.WodDto;
+import com.mk.fitter.api.namedwod.repository.dto.WodRecordCreateRequest;
 import com.mk.fitter.api.namedwod.repository.dto.WodRecordDto;
 import com.mk.fitter.api.namedwod.service.WodRecordService;
 import com.mk.fitter.api.namedwod.service.WodService;
@@ -43,6 +44,18 @@ public class WodController {
 	public ResponseEntity<List<WodCategoryDto>> getWodCategory() {
 		try {
 			return new ResponseEntity<>(wodService.getWodCategory(), HttpStatus.OK);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("/list/{category}")
+	@ApiOperation(value = "해당 카테고리 와드 리스트", notes = "해당 카테고리(Girls, Hero)의 와드 목록을 조회하는 API")
+	public ResponseEntity<List<WodDto>> getWodListByCategory(@PathVariable String category) {
+		try {
+			return new ResponseEntity<>(wodService.getWodListByCategory(category), HttpStatus.OK);
+
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -115,12 +128,12 @@ public class WodController {
 	@PostMapping("/wod-record/create")
 	@ApiOperation(value = "와드 기록 생성", notes = "와드 기록을 생성하는 API")
 	public ResponseEntity<Boolean> createWodRecord(@RequestHeader String Authorization,
-		@RequestBody WodRecordDto wodRecordDto) {
+		@RequestBody WodRecordCreateRequest wodRecordCreateRequest) {
 		// 토큰값으로 유저 가져오거나, 프론트에서 유저 id 받아야 함
 		Optional<Integer> UID = jwtService.extractUID(Authorization);
 		boolean result = false;
 		try {
-			result = wodService.createWodRecord(wodRecordDto, UID.get());
+			result = wodService.createWodRecord(wodRecordCreateRequest, UID.get());
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage());

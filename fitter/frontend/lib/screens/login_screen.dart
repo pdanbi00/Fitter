@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 
+// import 'package:fitter/screens/calendar.dart';
 import 'package:fitter/screens/nav_bar.dart';
 import 'package:fitter/screens/sign_up/additional_info.dart';
 import 'package:fitter/widgets/empty_box.dart';
@@ -31,9 +31,10 @@ class _LoginScreenState extends State<LoginScreen> {
   // 이 사람이 로그인 되어있는지 확인하는 함수!
   Future initPrefs() async {
     prefs = await SharedPreferences.getInstance();
-    final userID = prefs.getInt('userID');
-    // if (userID != null) {
+    final authorization = prefs.getString('Authorization');
+    // if (authorization != null) {
     //   // 이러면 그냥 바로 이 화면 안 띄우고 메인으로 넘어가면 됨... 되려나?
+    //   print("authorization : $authorization");
     //   Future.delayed(Duration.zero, () {
     //     Navigator.push(
     //       context,
