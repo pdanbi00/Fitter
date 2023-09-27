@@ -34,14 +34,10 @@ class _WodInputScreenState extends State<WodInputScreen> {
 
   var selectedDate = DateTime.now();
   late SharedPreferences prefs;
-  late String recordType;
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      recordType = (widget.type == "For Time") ? "count" : "time";
-    });
   }
 
   Future writePR() async {
@@ -233,9 +229,7 @@ class _WodInputScreenState extends State<WodInputScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => WodDetailScreen(
-                        wodName: widget.wodName,
-                        type: widget.type,
-                        wodId: widget.wodId),
+                        wodName: widget.wodName, wodId: widget.wodId),
                   ),
                 );
               },

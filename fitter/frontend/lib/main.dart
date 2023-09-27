@@ -28,9 +28,9 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      // home: WodDetailScreen(wodName: "Murph", type: "For Time", wodId: "1"),
+      home: WodDetailScreen(wodName: "Murph", wodId: "1"),
       // home: WodInputScreen(wodName: "Murph", type: "For Time", wodId: "1"),
-      home: NavBarWidget(),
+      // home: NavBarWidget(),
       // home: LoginScreen(),
       // home: ChartScreen(workoutName: "Clean"),
       // home: RecordScreen(),

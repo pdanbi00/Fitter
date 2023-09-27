@@ -2,17 +2,16 @@ import 'dart:convert';
 
 import 'package:fitter/models/wod_detail_model.dart';
 import 'package:fitter/screens/wod/wod_input_screen.dart';
+import 'package:fitter/widgets/button_mold.dart';
+import 'package:fitter/widgets/empty_box.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class WodDetailScreen extends StatefulWidget {
-  final String wodName, type, wodId;
+  final String wodName, wodId;
   const WodDetailScreen(
-      {super.key,
-      required this.wodName,
-      required this.type,
-      required this.wodId});
+      {super.key, required this.wodName, required this.wodId});
 
   @override
   State<WodDetailScreen> createState() => _WodDetailScreenState();
@@ -102,10 +101,20 @@ class _WodDetailScreenState extends State<WodDetailScreen> {
                               return Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
-                                child: detailButton(
-                                    snapshot.data![index].createDate,
-                                    snapshot.data![index].count.toString(),
-                                    snapshot.data![index].time.toString()),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return const MyOverlay(); // 오버레이 위젯을 반환
+                                      },
+                                    );
+                                  },
+                                  child: detailButton(
+                                      snapshot.data![index].createDate,
+                                      snapshot.data![index].count.toString(),
+                                      snapshot.data![index].time.toString()),
+                                ),
                               );
                             },
                             childCount: snapshot.data!.length,
@@ -142,7 +151,7 @@ class _WodDetailScreenState extends State<WodDetailScreen> {
                                               secondaryAnimation) =>
                                           WodInputScreen(
                                               wodName: widget.wodName,
-                                              type: widget.type,
+                                              type: "생성",
                                               wodId: widget.wodId)));
                             },
                             child: const Icon(
@@ -219,6 +228,64 @@ class _WodDetailScreenState extends State<WodDetailScreen> {
                   ),
                 ],
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MyOverlay extends StatelessWidget {
+  const MyOverlay({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: 200,
+        height: 200,
+        color: Colors.white,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const ButtonMold(
+                    btnText: "수정하기",
+                    horizontalLength: 30,
+                    verticalLength: 10,
+                    buttonColor: false),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                        color: const Color.fromARGB(255, 255, 13, 0), width: 3),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: const Text(
+                    "삭제하기",
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 255, 13, 0),
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Icon(Icons.cancel_presentation_rounded),
+                )
+              ],
             ),
           ],
         ),
