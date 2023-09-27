@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:fitter/screens/wod/wod_detail_screen.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:fitter/widgets/button_mold.dart';
@@ -24,6 +25,13 @@ class WodInputScreen extends StatefulWidget {
 
 class _WodInputScreenState extends State<WodInputScreen> {
   final recordController = TextEditingController();
+  final minController = TextEditingController();
+  final secController = TextEditingController();
+  final hourController = TextEditingController();
+  String defaultHour = "00";
+  String defaultMin = "00";
+  String defaultSec = "00";
+
   var selectedDate = DateTime.now();
   late SharedPreferences prefs;
   late String recordType;
@@ -32,7 +40,7 @@ class _WodInputScreenState extends State<WodInputScreen> {
   void initState() {
     super.initState();
     setState(() {
-      recordType = (widget.type == "For Time") ? "time" : "count";
+      recordType = (widget.type == "For Time") ? "count" : "time";
     });
   }
 
@@ -46,10 +54,21 @@ class _WodInputScreenState extends State<WodInputScreen> {
       'Content-Type': 'application/json'
     };
 
+    if (hourController.text != "") {
+      defaultHour = hourController.text;
+    }
+    if (minController.text != "") {
+      defaultMin = minController.text;
+    }
+    if (secController.text != "") {
+      defaultSec = secController.text;
+    }
+
     final body = jsonEncode(
       {
         "createDate": DateFormat('yyyy-MM-dd').format(selectedDate),
-        recordType: recordController.text,
+        "count": recordController.text,
+        "time": "$defaultHour:$defaultMin:$defaultSec",
         "wodId": widget.wodId,
       },
     );
@@ -68,16 +87,6 @@ class _WodInputScreenState extends State<WodInputScreen> {
       });
     }
   }
-
-  // Future goNext() async {
-  //   await writePR();
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => ChartScreen(wodName: widget.wodName),
-  //     ),
-  //   );
-  // }
 
   void _openDatePicker(BuildContext context) {
     BottomPicker.date(
@@ -155,10 +164,51 @@ class _WodInputScreenState extends State<WodInputScreen> {
               ),
             ),
             const EmptyBox(boxSize: 1),
+            Container(
+                width: double.maxFinite,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                decoration: BoxDecoration(
+                    border: const Border(
+                        bottom: BorderSide(color: Color(0xff0080ff), width: 3)),
+                    color: Colors.blueGrey.shade50),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: hourController,
+                        decoration: const InputDecoration(
+                          labelText: "시",
+                        ),
+                        keyboardType: TextInputType.number,
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: minController,
+                        decoration: const InputDecoration(
+                          labelText: "분",
+                        ),
+                        keyboardType: TextInputType.number,
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: secController,
+                        decoration: const InputDecoration(
+                          labelText: "초",
+                        ),
+                        keyboardType: TextInputType.number,
+                      ),
+                    ),
+                  ],
+                )),
+            const EmptyBox(boxSize: 1),
             TextField(
               controller: recordController,
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                labelText: (widget.type == "For Time") ? "time" : "count",
+                labelText: "count",
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: Color(0xff0080ff),
@@ -179,13 +229,15 @@ class _WodInputScreenState extends State<WodInputScreen> {
             GestureDetector(
               onTap: () async {
                 await writePR();
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) =>
-                //         ChartScreen(wodName: widget.wodName),
-                //   ),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => WodDetailScreen(
+                        wodName: widget.wodName,
+                        type: widget.type,
+                        wodId: widget.wodId),
+                  ),
+                );
               },
               child: const ButtonMold(
                   btnText: "등 록 하 기",

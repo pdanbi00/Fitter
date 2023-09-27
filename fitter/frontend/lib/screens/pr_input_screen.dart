@@ -55,16 +55,6 @@ class _PRInputScreenState extends State<PRInputScreen> {
     }
   }
 
-  Future goNext() async {
-    await writePR();
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChartScreen(workoutName: widget.workoutName),
-      ),
-    );
-  }
-
   void _openDatePicker(BuildContext context) {
     BottomPicker.date(
       title: ' ',

@@ -1,12 +1,12 @@
 class WODDetailModel {
-  final String createDate;
+  final String? createDate;
   final int? count;
-  final TimeModel? time;
+  final String? time;
 
   WODDetailModel.fromJson(Map<String, dynamic> json)
       : createDate = json['createDate'],
         count = json['count'],
-        time = TimeModel.fromJson(json['time']);
+        time = json['time'];
 }
 
 class TimeModel {

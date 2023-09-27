@@ -27,7 +27,9 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       // home: WodDetailScreen(wodName: "Murph", type: "For Time", wodId: "1"),
-      home: WodInputScreen(wodName: "Murph", type: "For Time", wodId: "1"),
+      // home: WodInputScreen(wodName: "Murph", type: "For Time", wodId: "1"),
+
+      home: LoginScreen(),
       // 데이터 없는 화면 테스트
       // home: ChartScreen(workoutName: "Kettlebell Sumo Deadlift High Pull"),
       // home: ChartScreen(workoutName: "Clean"),

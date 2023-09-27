@@ -1,16 +1,21 @@
 import 'package:fitter/screens/daily_calendar.dart';
 import 'package:fitter/screens/daily_keyword_screen.dart';
-import 'package:fitter/screens/login_screen.dart';
-import 'package:fitter/screens/sign_up/additional_info.dart';
 import 'package:flutter/material.dart';
 
 /// Flutter code sample for [BottomNavigationBar].
 
 void main() => runApp(const NavBarWidget());
 
-class NavBarWidget extends StatelessWidget {
+class NavBarWidget extends StatefulWidget {
   const NavBarWidget({super.key});
 
+  @override
+  State<NavBarWidget> createState() => _NavBarWidgetState();
+}
+
+bool colorChange = true;
+
+class _NavBarWidgetState extends State<NavBarWidget> {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
@@ -29,7 +34,7 @@ class BottomNavigationBarExample extends StatefulWidget {
 
 class _BottomNavigationBarExampleState
     extends State<BottomNavigationBarExample> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 2;
   static const List<Widget> _widgetOptions = <Widget>[
     Calendar(),
     Calendar(),
@@ -40,6 +45,7 @@ class _BottomNavigationBarExampleState
 
   void _onItemTapped(int index) {
     setState(() {
+      colorChange = !colorChange;
       _selectedIndex = index;
     });
   }
@@ -51,35 +57,41 @@ class _BottomNavigationBarExampleState
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.emoji_events_outlined),
+            icon: const Icon(Icons.emoji_events_outlined),
             label: 'Ranking',
-            backgroundColor: Colors.red,
+            backgroundColor:
+                colorChange ? const Color(0xff0080ff) : Colors.white,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.data_thresholding_sharp),
+            icon: const Icon(Icons.data_thresholding_sharp),
             label: 'Record',
-            backgroundColor: Colors.green,
+            backgroundColor:
+                colorChange ? const Color(0xff0080ff) : Colors.white,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month_outlined),
+            icon: const Icon(Icons.calendar_month_outlined),
             label: 'Calendar',
-            backgroundColor: Colors.purple,
+            backgroundColor:
+                colorChange ? const Color(0xff0080ff) : Colors.white,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.numbers),
+            icon: const Icon(Icons.numbers),
             label: 'Issue',
-            backgroundColor: Colors.pink,
+            backgroundColor:
+                colorChange ? const Color(0xff0080ff) : Colors.white,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.fitness_center_outlined),
+            icon: const Icon(Icons.fitness_center_outlined),
             label: 'Wod Generator',
-            backgroundColor: Colors.cyan,
+            backgroundColor:
+                colorChange ? const Color(0xff0080ff) : Colors.white,
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: const Color(0xFF0080FF),
+        selectedItemColor: colorChange ? Colors.white : const Color(0xff0080ff),
+        unselectedItemColor: colorChange ? Colors.white54 : Colors.blueGrey,
         onTap: _onItemTapped,
       ),
     );
