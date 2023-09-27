@@ -83,6 +83,5 @@ public class OAuth2Service {
 		UserDto createdUser = attributes.toEntity(socialType, attributes.getOAuth2UserInfo());
 		return userRepository.save(createdUser);
 	}
-
 }
 

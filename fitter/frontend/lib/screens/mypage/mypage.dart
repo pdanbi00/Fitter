@@ -1,4 +1,7 @@
+import 'package:fitter/models/user_profile.dart';
+import 'package:fitter/services/api_service.dart';
 import 'package:fitter/widgets/button_mold.dart';
+import 'package:fitter/widgets/mypage_alertDialog.dart';
 import 'package:flutter/material.dart';
 
 class MyPage extends StatefulWidget {
@@ -10,6 +13,20 @@ class MyPage extends StatefulWidget {
 
 class _MyPageState extends State<MyPage> {
   bool button1 = false, button2 = false, button3 = false, button4 = false;
+  late Future<UserProfile> userProfile;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      userProfile = ApiService.getUserProfile();
+    });
+  }
+
+  resign() async {
+    final result = ApiService.resign();
+    print(result);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,31 +65,59 @@ class _MyPageState extends State<MyPage> {
                                 width: 5,
                               ),
                             ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Image.network(
-                                "http://www.econotelling.com/news/photo/202004/2875_3504_1147.png",
-                                fit: BoxFit.cover,
-                              ),
+                            child: FutureBuilder(
+                              future: userProfile,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: snapshot.data!.image!,
+                                  );
+                                }
+                                return ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: const Icon(
+                                    Icons.person,
+                                    size: 90,
+                                  ),
+                                );
+                              },
                             ),
                           ),
                           const SizedBox(
                             height: 10,
                           ),
-                          const Text(
-                            "김 싸 피",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          FutureBuilder(
+                            future: userProfile,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Text(
+                                  snapshot.data!.nickname,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w200,
+                                    color: Colors.black.withOpacity(0.4),
+                                  ),
+                                );
+                              }
+                              return const Text("...");
+                            },
                           ),
-                          Text(
-                            "구미 크로스핏 체육관",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w200,
-                              color: Colors.black.withOpacity(0.4),
-                            ),
+                          FutureBuilder(
+                            future: userProfile,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Text(
+                                  snapshot.data!.box,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w200,
+                                    color: Colors.black.withOpacity(0.4),
+                                  ),
+                                );
+                              }
+                              return const Text("...");
+                            },
                           ),
                         ],
                       ),
@@ -89,7 +134,38 @@ class _MyPageState extends State<MyPage> {
                         child: IconButton(
                           iconSize: 30,
                           alignment: Alignment.bottomRight,
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              barrierDismissible: true, // 바깥 영역 터치시 닫을지 여부
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  content: MyPageAlertDialog(
+                                    userProfile: userProfile,
+                                  ),
+                                  actions: [
+                                    Center(
+                                      child: TextButton(
+                                        child: const ButtonMold(
+                                          btnText: "수정완료",
+                                          horizontalLength: 30,
+                                          verticalLength: 10,
+                                          buttonColor: true,
+                                        ),
+                                        onPressed: () {
+                                          // 수정한 내용 저장하는 로직 작성해야 함
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
                           icon: const Icon(
                             Icons.mode_edit_outline_rounded,
                           ),
@@ -177,6 +253,57 @@ class _MyPageState extends State<MyPage> {
               setState(() {
                 button4 = false;
               });
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    title: const Text(
+                      '정말 탈퇴하시겠습니까?',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    actions: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                              child: const Text(
+                                '확인',
+                                style: TextStyle(
+                                  color: Color(0xFF0080FF),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                resign();
+                              },
+                            ),
+                            TextButton(
+                              child: const Text(
+                                '취소',
+                                style: TextStyle(
+                                  color: Color(0xFF0080FF),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),

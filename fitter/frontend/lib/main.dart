@@ -1,3 +1,4 @@
+import 'package:fitter/screens/daily/daily_calendar.dart';
 import 'package:fitter/screens/chart_screen.dart';
 import 'package:fitter/screens/login_screen.dart';
 import 'package:fitter/screens/pr_input_screen.dart';
@@ -30,8 +31,6 @@ class App extends StatelessWidget {
       // home: WodInputScreen(wodName: "Murph", type: "For Time", wodId: "1"),
 
       home: LoginScreen(),
-      // 데이터 없는 화면 테스트
-      // home: ChartScreen(workoutName: "Kettlebell Sumo Deadlift High Pull"),
       // home: ChartScreen(workoutName: "Clean"),
       // home: RecordScreen(),
       // home: DailyKeyword(),

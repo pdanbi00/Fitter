@@ -1,4 +1,5 @@
-import 'package:fitter/screens/daily_calendar.dart';
+import 'package:fitter/screens/daily/daily_calendar.dart';
+
 import 'package:fitter/screens/daily_keyword_screen.dart';
 import 'package:flutter/material.dart';
 
