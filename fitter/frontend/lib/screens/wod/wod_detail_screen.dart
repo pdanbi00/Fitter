@@ -176,32 +176,48 @@ class _WodDetailScreenState extends State<WodDetailScreen> {
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Flexible(
-              flex: 1,
-              child: Text(
-                date,
-                style: const TextStyle(color: Colors.white, fontSize: 20),
+            Text(
+              date,
+              style: const TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            Offstage(
+              offstage: (time != "00:00:00"),
+              child: const Row(
+                children: [
+                  SizedBox(
+                    width: 70,
+                  ),
+                ],
               ),
             ),
-            Flexible(
-              flex: 1,
-              child: Offstage(
-                offstage: (count == "0"),
-                child: Text(
-                  "$count 회",
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
-                ),
+            Offstage(
+              offstage: (count == "0"),
+              child: Row(
+                children: [
+                  const SizedBox(
+                    width: 50,
+                  ),
+                  Text(
+                    "$count 회",
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ],
               ),
             ),
-            Flexible(
-              flex: 1,
-              child: Offstage(
-                offstage: (time == "00:00:00"),
-                child: Text(
-                  time,
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
-                ),
+            Offstage(
+              offstage: (time == "00:00:00"),
+              child: Row(
+                children: [
+                  const SizedBox(
+                    width: 30,
+                  ),
+                  Text(
+                    time,
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ],
               ),
             ),
           ],
