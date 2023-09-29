@@ -53,18 +53,22 @@ def health_crawler():
 
 
 def start_sports_crawler():
-    asyncChosunSportsNewsCrawler.start()
-    asyncDongaSportsNewsCrawler.start()
-    asyncJoongangSportsNewsCrawler.start()
-    asyncNaverSportsNewsCrawler.start()
-
+    try:
+        asyncChosunSportsNewsCrawler.start()
+        asyncDongaSportsNewsCrawler.start()
+        asyncJoongangSportsNewsCrawler.start()
+        asyncNaverSportsNewsCrawler.start()
+    except Exception as e:
+        print(f"Error occurred: {e}")
 
 def start_health_crawler():
-    asyncNaverHealthNewsCrawler.start()
-    asyncChosunHealthNewsCrawler.start()
-    asyncDongaHealthNewsCrawler.start()
-    asyncJoongangHealthNewsCrawler.start()
-
+    try:
+        asyncNaverHealthNewsCrawler.start()
+        asyncChosunHealthNewsCrawler.start()
+        asyncDongaHealthNewsCrawler.start()
+        asyncJoongangHealthNewsCrawler.start()
+    except Exception as e:
+        print(f"Error occurred: {e}")
 
 def delete_old_files():  # 일주일 지난 크롤링 파일 삭제
     output_dir_list = ["output/sports/", "output/health/"]
