@@ -106,7 +106,11 @@ class _WodDetailScreenState extends State<WodDetailScreen> {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return const MyOverlay(); // 오버레이 위젯을 반환
+                                        return MenuOverlay(
+                                            wodName: widget.wodName,
+                                            wodId: widget.wodId,
+                                            individual: snapshot.data![index]
+                                                .id); // 오버레이 위젯을 반환
                                       },
                                     );
                                   },
@@ -131,28 +135,7 @@ class _WodDetailScreenState extends State<WodDetailScreen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                      transitionsBuilder: (context, animation,
-                                          secondaryAnimation, child) {
-                                        var begin = const Offset(1.0, 0.0);
-                                        var end = Offset.zero;
-                                        var curve = Curves.ease;
-                                        var tween = Tween(
-                                                begin: begin, end: end)
-                                            .chain(CurveTween(curve: curve));
-                                        return SlideTransition(
-                                          position: animation.drive(tween),
-                                          child: child,
-                                        );
-                                      },
-                                      pageBuilder: (context, anmation,
-                                              secondaryAnimation) =>
-                                          WodInputScreen(
-                                              wodName: widget.wodName,
-                                              type: "생성",
-                                              wodId: widget.wodId)));
+                              Navigator.push(context, goUpdate("생성"));
                             },
                             child: const Icon(
                               Icons.add_box,
@@ -173,6 +156,23 @@ class _WodDetailScreenState extends State<WodDetailScreen> {
         },
       ),
     );
+  }
+
+  PageRouteBuilder<dynamic> goUpdate(updateType) {
+    return PageRouteBuilder(
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var begin = const Offset(1.0, 0.0);
+          var end = Offset.zero;
+          var curve = Curves.ease;
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+        pageBuilder: (context, anmation, secondaryAnimation) => WodInputScreen(
+            wodName: widget.wodName, type: updateType, wodId: widget.wodId));
   }
 
   Container detailButton(date, count, time) {
@@ -236,11 +236,38 @@ class _WodDetailScreenState extends State<WodDetailScreen> {
   }
 }
 
-class MyOverlay extends StatelessWidget {
-  const MyOverlay({super.key});
+class MenuOverlay extends StatelessWidget {
+  final String wodName;
+  final String wodId;
+  final int individual;
+  const MenuOverlay(
+      {super.key,
+      required this.wodName,
+      required this.wodId,
+      required this.individual});
 
   @override
   Widget build(BuildContext context) {
+    late SharedPreferences prefs;
+
+    Future deleteRecord(individual) async {
+      prefs = await SharedPreferences.getInstance();
+      final accessToken = prefs.getString('Authorization');
+
+      Map<String, String> headers = {
+        'Authorization': accessToken.toString(),
+      };
+
+      var url = Uri.parse(
+          'http://j9d202.p.ssafy.io:8000/api/named-wod/wod-record/delete/$individual');
+      var response = await http.delete(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        print('Response data: ${response.body}');
+      }
+      throw Error();
+    }
+
     return Center(
       child: Container(
         width: 200,
@@ -252,28 +279,69 @@ class MyOverlay extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const ButtonMold(
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      PageRouteBuilder(
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                          var begin = const Offset(1.0, 0.0);
+                          var end = Offset.zero;
+                          var curve = Curves.ease;
+                          var tween = Tween(begin: begin, end: end)
+                              .chain(CurveTween(curve: curve));
+                          return SlideTransition(
+                            position: animation.drive(tween),
+                            child: child,
+                          );
+                        },
+                        pageBuilder: (context, anmation, secondaryAnimation) =>
+                            WodInputScreen(
+                          wodName: wodName,
+                          type: individual, // 적절한 type 값을 설정하세요
+                          wodId: wodId,
+                        ),
+                      ),
+                    );
+                  },
+                  child: const ButtonMold(
                     btnText: "수정하기",
                     horizontalLength: 30,
                     verticalLength: 10,
-                    buttonColor: false),
+                    buttonColor: false,
+                  ),
+                ),
                 const SizedBox(
                   height: 10,
                 ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                        color: const Color.fromARGB(255, 255, 13, 0), width: 3),
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: const Text(
-                    "삭제하기",
-                    style: TextStyle(
-                        color: Color.fromARGB(255, 255, 13, 0),
-                        fontWeight: FontWeight.w600),
+                GestureDetector(
+                  onTap: () {
+                    deleteRecord(individual);
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => WodDetailScreen(
+                            wodName: wodName,
+                            wodId: wodId,
+                          ),
+                        ),
+                        (route) => false);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                          color: const Color.fromARGB(255, 255, 13, 0),
+                          width: 3),
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: const Text(
+                      "삭제하기",
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 255, 13, 0),
+                          fontWeight: FontWeight.w600),
+                    ),
                   ),
                 ),
                 const SizedBox(
