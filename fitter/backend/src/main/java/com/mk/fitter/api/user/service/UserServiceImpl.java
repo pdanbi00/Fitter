@@ -82,15 +82,19 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public byte[] getProfileImg(String accessToken) throws Exception {
+	public ProfileImgDto getProfileImgDto(String accessToken) throws Exception {
 		Integer uid = jwtService.extractUID(accessToken)
-			.orElseThrow(() -> new Exception("UserService :: 유효하지 않은 access token입니다."));
+			.orElseThrow(() -> new Exception("getProfileImg :: 유효하지 않은 access token입니다."));
 
 		UserDto userDto = userRepository.findById(uid)
-			.orElseThrow(() -> new Exception("UserService :: 존재하지 않는 사용자입니다."));
+			.orElseThrow(() -> new Exception("getProfileImg :: 존재하지 않는 사용자입니다."));
 
-		ProfileImgDto profile = userDto.getProfileImgDto();
-		if(profile == null)
+		return userDto.getProfileImgDto();
+	}
+
+	@Override
+	public byte[] getProfileImg(ProfileImgDto profile) throws Exception {
+		if (profile == null)
 			return null;
 
 		return fileService.getProfileImg(profile);
@@ -321,16 +325,18 @@ public class UserServiceImpl implements UserService {
 		// 프로필 사진 서버/db에서 삭제
 		ProfileImgDto profileImgDto = user.getProfileImgDto();
 
-		if(profileImgDto != null && profileImgDto.getId() != DEFAULT_IMG_ID) {
-			fileService.deleteProfileImg(user.getProfileImgDto());
-		}
-
 		// 카카오랑 연결 끊기
 		String socialId = user.getSocialId();
 		unlinkUser(socialId);
 
 		// 사용자 db에서 삭제
 		userRepository.deleteById(user.getId());
+
+		// 서버/db에서 프로필 사진 삭제
+		if (profileImgDto != null && profileImgDto.getId() != DEFAULT_IMG_ID) {
+			fileService.deleteProfileImg(user.getProfileImgDto());
+		}
+
 	}
 
 	// 카카오랑 연결 끊기 구현

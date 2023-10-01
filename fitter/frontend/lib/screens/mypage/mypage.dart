@@ -144,9 +144,7 @@ class _MyPageState extends State<MyPage> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
                                   ),
-                                  content: MyPageAlertDialog(
-                                    userProfile: userProfile,
-                                  ),
+                                  content: MyPageAlertDialog(),
                                   actions: [
                                     Center(
                                       child: TextButton(
@@ -291,6 +289,13 @@ class _MyPageState extends State<MyPage> {
                               onPressed: () {
                                 Navigator.of(context).pop();
                                 resign();
+                                ApiService.deleteToken();
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const LoginScreen(),
+                                  ),
+                                );
                               },
                             ),
                             TextButton(
