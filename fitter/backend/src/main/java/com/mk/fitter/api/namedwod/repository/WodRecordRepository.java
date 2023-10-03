@@ -18,10 +18,13 @@ public interface WodRecordRepository extends JpaRepository<WodRecordDto, Integer
 
 	List<WodRecordDto> findByWod_Id(int wodId);
 
-	List<WodRecordDto> findByWod_IdAndUser_IdOrderByCreateDateDesc(int userId, int wodId);
+	List<WodRecordDto> findByWod_IdAndUser_IdOrderByCreateDateDesc(int wodId, int userId);
 
 	List<WodRecordDto> findByUser_Id(int userId);
 
-	@Query(value = "SELECT *, RANK() over(ORDER BY time ASC) AS ranking FROM wod WHERE id = :id", nativeQuery = true)
-	Page<WodRecordDto> findRankById(int id, Pageable pageable);
+	@Query(value = "SELECT *, RANK() over(ORDER BY time ASC) AS ranking FROM wod_record WHERE wod_id = :wodId", nativeQuery = true)
+	Page<WodRecordDto> findRankById(int wodId, Pageable pageable);
+
+	@Query(value = "SELECT *, RANK() OVER(ORDER BY TIME ASC) AS ranking FROM wod_record WHERE wod_id = :wodId and user_id = :userId", nativeQuery = true)
+	WodRecordDto findRankByIdAndUserId(int wodId, int userId);
 }

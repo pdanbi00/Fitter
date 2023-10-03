@@ -6,11 +6,22 @@ import java.util.Optional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mk.fitter.api.common.oauth.VO.UserResponseVO;
+import com.mk.fitter.api.file.repository.dto.ProfileImgDto;
 import com.mk.fitter.api.user.repository.dto.UserDto;
 
 public interface UserService {
 	UserDto saveUserInfo(UserResponseVO user, MultipartFile file) throws Exception;
 	UserDto getUserInfo(String accessToken) throws Exception;
+
+	ProfileImgDto getProfileImgDto(String accessToken) throws Exception;
+	byte[] getProfileImg(ProfileImgDto profile) throws Exception;
+	String getEmail(String accessToken) throws Exception;
+	String getNickname(String accessToken) throws Exception;
+	String getAgeRange(String accessToken) throws Exception;
+	Boolean getGender(String accessToken) throws Exception;
+	Date getBirthday(String accessToken) throws Exception;
+	Boolean getIsTrainer(String accessToken) throws Exception;
+
 
 	UserDto modifyBox(int boxId, String accessToken) throws Exception;
 
@@ -30,7 +41,7 @@ public interface UserService {
 
 	UserDto deleteUserprofileImg(String accessToken) throws Exception;
 
-	void unlinkUser(String accessToken) throws Exception;
-	void deleteUser(String accessToken) throws Exception;
+	void signOut(String accessToken) throws Exception;
+	void unlinkUser(String socialId) throws Exception;
 
 }
