@@ -36,7 +36,7 @@ class _BottomNavigationBarExampleState
     Calendar(),
     Calendar(),
     Calendar(),
-    DailyKeyword();
+    DailyKeyword(),
     Calendar(),
   ];
 
