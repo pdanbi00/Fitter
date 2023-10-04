@@ -34,14 +34,6 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: LoginScreen(),
-      // home: MyPage()
-      // home: ChartScreen(workoutName: "Clean"),
-      // home: RecordScreen(),
-      // home: DailyKeyword(),
-      // home: CrossfitRankingScreen(),
-
-      // home: WodRakingScreen(),
-      // home: LoginScreen(),
     );
   }
 }
