@@ -1,3 +1,4 @@
+import 'package:fitter/screens/daily/daily_calendar.dart';
 import 'package:fitter/screens/login_screen.dart';
 
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     FlutterNativeSplash.remove();
     return const MaterialApp(
-      home: LoginScreen(),
+      home: Calendar(),
     );
   }
 }
