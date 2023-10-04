@@ -349,11 +349,11 @@ class MenuOverlay extends StatelessWidget {
                     deleteRecord(individual);
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
-                          builder: (context) => ChartScreen(
-                            workoutName: workoutName,
-                          ),
-                        ),
-                        (route) => false);
+                            builder: (context) => ChartScreen(
+                                  workoutName: workoutName,
+                                ),
+                            fullscreenDialog: true),
+                        (route) => route.isFirst);
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
