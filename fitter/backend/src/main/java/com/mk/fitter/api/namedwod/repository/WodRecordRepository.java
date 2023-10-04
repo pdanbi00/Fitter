@@ -1,6 +1,7 @@
 package com.mk.fitter.api.namedwod.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,10 +19,13 @@ public interface WodRecordRepository extends JpaRepository<WodRecordDto, Integer
 
 	List<WodRecordDto> findByWod_Id(int wodId);
 
-	List<WodRecordDto> findByWod_IdAndUser_IdOrderByCreateDateDesc(int userId, int wodId);
+	List<WodRecordDto> findByWod_IdAndUser_IdOrderByCreateDateDesc(int wodId, int userId);
 
 	List<WodRecordDto> findByUser_Id(int userId);
 
-	@Query(value = "SELECT *, RANK() over(ORDER BY time ASC) AS ranking FROM wod WHERE id = :id", nativeQuery = true)
-	Page<WodRecordDto> findRankById(int id, Pageable pageable);
+	@Query(value = "SELECT *, RANK() over(ORDER BY time ASC) AS ranking FROM wod_record WHERE wod_id = :wodId", nativeQuery = true)
+	Page<Map<String, String>> findRankById(int wodId, Pageable pageable);
+
+	@Query(value = "SELECT *, RANK() OVER(ORDER BY TIME ASC) AS ranking FROM wod_record WHERE wod_id = :wodId and user_id = :userId", nativeQuery = true)
+	Map<String, String> findRankByIdAndUserId(int wodId, int userId);
 }

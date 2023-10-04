@@ -1,6 +1,5 @@
 package com.mk.fitter.api.namedwod.service;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,8 +29,8 @@ public class WodServiceImpl implements WodService {
 	@Override
 	public List<WodRecordDto> getNamedWodList(int userId, String namedWodName) {
 		WodDto byName = wodRepository.findByName(namedWodName);
-		List<WodRecordDto> byWodId = wodRecordRepository.findByWod_IdAndUser_IdOrderByCreateDateDesc(userId,
-			byName.getId());
+		List<WodRecordDto> byWodId = wodRecordRepository.findByWod_IdAndUser_IdOrderByCreateDateDesc(
+			byName.getId(), userId);
 		return byWodId;
 	}
 
@@ -81,7 +80,7 @@ public class WodServiceImpl implements WodService {
 	}
 
 	@Override
-	public boolean modifyWodRecord(int wodRecordId, LocalTime time, int userId) throws Exception {
+	public boolean modifyWodRecord(int wodRecordId, WodRecordDto time, int userId) throws Exception {
 		Optional<UserDto> byId = userRepository.findById(userId);
 		if (byId.isEmpty()) {
 			throw new Exception("존재하지 않는 회원입니다.");
@@ -95,7 +94,12 @@ public class WodServiceImpl implements WodService {
 		if (modifyWod.getUser().getId() != userId) {
 			throw new Exception("본인이 작성한 기록이 아닙니다.");
 		}
-		modifyWod.setTime(time);
+		if (!modifyWod.getTime().equals(time.getTime())) {
+			modifyWod.setTime(time.getTime());
+		}
+		if (modifyWod.getCount() != time.getCount()) {
+			modifyWod.setCount(time.getCount());
+		}
 		wodRecordRepository.save(modifyWod);
 		return true;
 	}

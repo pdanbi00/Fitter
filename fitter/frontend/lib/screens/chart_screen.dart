@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:fitter/models/rm_detail.dart';
 import 'package:fitter/screens/pr_input_screen.dart';
+import 'package:fitter/widgets/button_mold.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -22,9 +23,6 @@ class _ChartScreenState extends State<ChartScreen> {
   void initState() {
     super.initState();
     setAll();
-    // setState(() {
-    //   oneRM = callServer();
-    // });
   }
 
   bool showChartLabel = false;
@@ -37,8 +35,12 @@ class _ChartScreenState extends State<ChartScreen> {
     prefs = await SharedPreferences.getInstance();
     final accessToken = prefs.getString('Authorization');
 
-    Map<String, String> headers = {
-      'Authorization': accessToken.toString(),
+    // Map<String, String> headers = {
+    //   'Authorization': accessToken.toString(),
+    // };
+    final headers = {
+      'Authorization':
+          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NTg3NjY1NywiaWQiOjQwLCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.hGHLJoP5Nj9p-cI2xADluyNEJIlPN1eu1668kwiob9aWO_LZWh9wZ2H1YJPRbgwNZpsecadDtFOCCjKe5UdzBw'
     };
 
     var url = Uri.parse(
@@ -48,7 +50,8 @@ class _ChartScreenState extends State<ChartScreen> {
     List<RMDetailModel> rmLists = [];
 
     if (response.statusCode == 200) {
-      print('Response data: ${response.body}');
+      // print('Response data: ${response.body}');
+      print("success");
       final List<dynamic> rms = jsonDecode(response.body);
       for (var rm in rms) {
         rmLists.add(RMDetailModel.fromJson(rm));
@@ -57,17 +60,6 @@ class _ChartScreenState extends State<ChartScreen> {
     }
     throw Error();
   }
-
-  // Future<void> makeListAsync(List<RMDetailModel> data) async {
-  //   setState(() {
-  //     for (int index = 0; index < data.length; index++) {
-  //       chartData.add(ChartData(
-  //         DateTime.parse(data[index].createDate),
-  //         data[index].maxWeight.toDouble(),
-  //       ));
-  //     }
-  //   });
-  // }
 
   void makeListAsync(List<RMDetailModel> data) async {
     setState(() {
@@ -169,9 +161,23 @@ class _ChartScreenState extends State<ChartScreen> {
                               return Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
-                                child: detailRMButton(
-                                    snapshot.data![index].createDate,
-                                    snapshot.data![index].maxWeight.toString()),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return MenuOverlay(
+                                            workoutName: widget.workoutName,
+                                            individual:
+                                                snapshot.data![index].id);
+                                      },
+                                    );
+                                  },
+                                  child: detailRMButton(
+                                      snapshot.data![index].createDate,
+                                      snapshot.data![index].maxWeight
+                                          .toString()),
+                                ),
                               );
                             },
                             childCount: snapshot.data!.length,
@@ -207,8 +213,9 @@ class _ChartScreenState extends State<ChartScreen> {
                                       pageBuilder: (context, anmation,
                                               secondaryAnimation) =>
                                           PRInputScreen(
-                                              workoutName:
-                                                  widget.workoutName)));
+                                            workoutName: widget.workoutName,
+                                            type: "생성",
+                                          )));
                             },
                             child: const Icon(
                               Icons.add_box,
@@ -267,4 +274,123 @@ class ChartData {
   final double y;
 
   ChartData(this.x, this.y);
+}
+
+class MenuOverlay extends StatelessWidget {
+  final String workoutName;
+  final int individual;
+  const MenuOverlay(
+      {super.key, required this.workoutName, required this.individual});
+
+  @override
+  Widget build(BuildContext context) {
+    late SharedPreferences prefs;
+
+    Future deleteRecord(individual) async {
+      prefs = await SharedPreferences.getInstance();
+      final accessToken = prefs.getString('Authorization');
+
+      Map<String, String> headers = {
+        'Authorization': accessToken.toString(),
+      };
+
+      var url = Uri.parse(
+          'http://j9d202.p.ssafy.io:8000/api/record/delete/$individual');
+      var response = await http.delete(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        print('Response data: ${response.body}');
+      }
+      throw Error();
+    }
+
+    return Center(
+      child: Container(
+        width: 200,
+        height: 200,
+        color: Colors.white,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      PageRouteBuilder(
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                            var begin = const Offset(1.0, 0.0);
+                            var end = Offset.zero;
+                            var curve = Curves.ease;
+                            var tween = Tween(begin: begin, end: end)
+                                .chain(CurveTween(curve: curve));
+                            return SlideTransition(
+                              position: animation.drive(tween),
+                              child: child,
+                            );
+                          },
+                          pageBuilder:
+                              (context, anmation, secondaryAnimation) =>
+                                  PRInputScreen(
+                                      workoutName: workoutName,
+                                      type: individual)),
+                    );
+                  },
+                  child: const ButtonMold(
+                    btnText: "수정하기",
+                    horizontalLength: 30,
+                    verticalLength: 10,
+                    buttonColor: false,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    deleteRecord(individual);
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => ChartScreen(
+                            workoutName: workoutName,
+                          ),
+                        ),
+                        (route) => false);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                          color: const Color.fromARGB(255, 255, 13, 0),
+                          width: 3),
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: const Text(
+                      "삭제하기",
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 255, 13, 0),
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Icon(Icons.cancel_presentation_rounded),
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

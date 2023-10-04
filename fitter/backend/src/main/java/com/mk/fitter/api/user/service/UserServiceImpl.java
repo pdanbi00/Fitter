@@ -45,6 +45,8 @@ public class UserServiceImpl implements UserService {
 
 	private final RestTemplate restTemplate = new RestTemplate();
 
+	private final Integer DEFAULT_IMG_ID = 1;
+
 	public UserDto saveUserInfo(UserResponseVO newUserInfo, MultipartFile file) throws Exception {
 
 		UserDto user = userRepository.findById(newUserInfo.getId())
@@ -72,13 +74,96 @@ public class UserServiceImpl implements UserService {
 		return userRepository.save(user);
 	}
 
-
-
 	@Override
 	public UserDto getUserInfo(String accessToken) throws Exception {
 		Integer uid = jwtService.extractUID(accessToken)
 			.orElseThrow(() -> new Exception("UserService :: 유효하지 않은 access token입니다."));
 		return userRepository.findById(uid).orElseThrow(() -> new Exception("UserService :: 존재하지 않는 사용자입니다."));
+	}
+
+	@Override
+	public ProfileImgDto getProfileImgDto(String accessToken) throws Exception {
+		Integer uid = jwtService.extractUID(accessToken)
+			.orElseThrow(() -> new Exception("getProfileImg :: 유효하지 않은 access token입니다."));
+
+		UserDto userDto = userRepository.findById(uid)
+			.orElseThrow(() -> new Exception("getProfileImg :: 존재하지 않는 사용자입니다."));
+
+		return userDto.getProfileImgDto();
+	}
+
+	@Override
+	public byte[] getProfileImg(ProfileImgDto profile) throws Exception {
+		if (profile == null)
+			return null;
+
+		return fileService.getProfileImg(profile);
+	}
+
+	@Override
+	public String getEmail(String accessToken) throws Exception {
+		Integer uid = jwtService.extractUID(accessToken)
+			.orElseThrow(() -> new Exception("UserService :: 유효하지 않은 access token입니다."));
+
+		UserDto userDto = userRepository.findById(uid)
+			.orElseThrow(() -> new Exception("UserService :: 존재하지 않는 사용자입니다."));
+
+		return userDto.getEmail();
+	}
+
+	@Override
+	public String getNickname(String accessToken) throws Exception {
+		Integer uid = jwtService.extractUID(accessToken)
+			.orElseThrow(() -> new Exception("UserService :: 유효하지 않은 access token입니다."));
+
+		UserDto userDto = userRepository.findById(uid)
+			.orElseThrow(() -> new Exception("UserService :: 존재하지 않는 사용자입니다."));
+
+		return userDto.getNickname();
+	}
+
+	@Override
+	public String getAgeRange(String accessToken) throws Exception {
+		Integer uid = jwtService.extractUID(accessToken)
+			.orElseThrow(() -> new Exception("UserService :: 유효하지 않은 access token입니다."));
+
+		UserDto userDto = userRepository.findById(uid)
+			.orElseThrow(() -> new Exception("UserService :: 존재하지 않는 사용자입니다."));
+
+		return userDto.getAgeRange();
+	}
+
+	@Override
+	public Boolean getGender(String accessToken) throws Exception {
+		Integer uid = jwtService.extractUID(accessToken)
+			.orElseThrow(() -> new Exception("UserService :: 유효하지 않은 access token입니다."));
+
+		UserDto userDto = userRepository.findById(uid)
+			.orElseThrow(() -> new Exception("UserService :: 존재하지 않는 사용자입니다."));
+
+		return userDto.getGender();
+	}
+
+	@Override
+	public Date getBirthday(String accessToken) throws Exception {
+		Integer uid = jwtService.extractUID(accessToken)
+			.orElseThrow(() -> new Exception("UserService :: 유효하지 않은 access token입니다."));
+
+		UserDto userDto = userRepository.findById(uid)
+			.orElseThrow(() -> new Exception("UserService :: 존재하지 않는 사용자입니다."));
+
+		return userDto.getBirthday();
+	}
+
+	@Override
+	public Boolean getIsTrainer(String accessToken) throws Exception {
+		Integer uid = jwtService.extractUID(accessToken)
+			.orElseThrow(() -> new Exception("UserService :: 유효하지 않은 access token입니다."));
+
+		UserDto userDto = userRepository.findById(uid)
+			.orElseThrow(() -> new Exception("UserService :: 존재하지 않는 사용자입니다."));
+
+		return userDto.getIsTrainer();
 	}
 
 	@Override
@@ -196,7 +281,7 @@ public class UserServiceImpl implements UserService {
 
 		// 기존 프로필 사진 서버/db에서 삭제
 		ProfileImgDto prevProfile = user.getProfileImgDto();
-		if (prevProfile != null) {
+		if (prevProfile != null && prevProfile.getId() != DEFAULT_IMG_ID) {
 			fileService.deleteProfileImg(prevProfile);
 		}
 
@@ -220,20 +305,43 @@ public class UserServiceImpl implements UserService {
 		// 사용자 프로필dto
 		ProfileImgDto profile = user.getProfileImgDto();
 
-		user.setProfileImgDto(null);
+		// 기본 프로필 사진 받아오기
+		ProfileImgDto defaultImg = fileService.getProfileImg(1);
+
+		user.setProfileImgDto(defaultImg);
 
 		// 프로필 사진 서버/db에서 삭제
-		if (profile != null) {
+		if (profile != null && profile.getId() != DEFAULT_IMG_ID) {
 			fileService.deleteProfileImg(profile);
 		}
 		return userRepository.save(user);
 	}
 
+	// 회원 탈퇴
+	@Override
+	public void signOut(String accessToken) throws Exception {
+		UserDto user = getUserInfo(accessToken);
+
+		// 프로필 사진 서버/db에서 삭제
+		ProfileImgDto profileImgDto = user.getProfileImgDto();
+
+		// 카카오랑 연결 끊기
+		String socialId = user.getSocialId();
+		unlinkUser(socialId);
+
+		// 사용자 db에서 삭제
+		userRepository.deleteById(user.getId());
+
+		// 서버/db에서 프로필 사진 삭제
+		if (profileImgDto != null && profileImgDto.getId() != DEFAULT_IMG_ID) {
+			fileService.deleteProfileImg(user.getProfileImgDto());
+		}
+
+	}
+
 	// 카카오랑 연결 끊기 구현
 	@Override
-	public void unlinkUser(String accessToken) throws Exception {
-		UserDto user = getUserInfo(accessToken);
-		String socialId = user.getSocialId();
+	public void unlinkUser(String socialId) throws Exception {
 		System.out.println(socialId);
 
 		// header 만들기
@@ -259,12 +367,5 @@ public class UserServiceImpl implements UserService {
 		);
 
 		//System.out.println("UserServiceImpl :: unlinkUser :: " + response.getBody().get("id"));
-	}
-
-	@Override
-	public void deleteUser(String accessToken) throws Exception {
-		Integer uid = jwtService.extractUID(accessToken)
-			.orElseThrow(() -> new Exception("UserService :: 유효하지 않은 access token입니다."));
-		userRepository.deleteById(uid);
 	}
 }
