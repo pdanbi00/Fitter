@@ -33,8 +33,13 @@ class _WodDetailScreenState extends State<WodDetailScreen> {
     prefs = await SharedPreferences.getInstance();
     final accessToken = prefs.getString('Authorization');
 
-    Map<String, String> headers = {
-      'Authorization': accessToken.toString(),
+    // Map<String, String> headers = {
+    //   'Authorization': accessToken.toString(),
+    // };
+
+    final headers = {
+      'Authorization':
+          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU1NzExNCwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.Klzu7VpJOg-lVCXkGz8vwiZ6_sSMzqa0Y5gcYWGB7ZcSM0ZTSUrTNKs44c6NmKhUGSXSnXUwgeqeLIIBAdhc5g'
     };
 
     var url = Uri.parse(

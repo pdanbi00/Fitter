@@ -40,7 +40,7 @@ class _ChartScreenState extends State<ChartScreen> {
     // };
     final headers = {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NTg3NjY1NywiaWQiOjQwLCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.hGHLJoP5Nj9p-cI2xADluyNEJIlPN1eu1668kwiob9aWO_LZWh9wZ2H1YJPRbgwNZpsecadDtFOCCjKe5UdzBw'
+          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU1NjcwOSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.oHBW06jowIoDwXwUDs1n3gWtWIyIk5iOncB5lSJMb3SuQIAIHq3VZgqVaT200cnmdYY8hwE-2Zu3elcyL5XuTQ'
     };
 
     var url = Uri.parse(

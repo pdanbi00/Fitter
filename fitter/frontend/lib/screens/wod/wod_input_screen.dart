@@ -86,8 +86,14 @@ class _WodInputScreenState extends State<WodInputScreen> {
     var url = Uri.parse(
         'http://j9d202.p.ssafy.io:8000/api/named-wod/wod-record/modify/${widget.type}');
 
+    // final headers = {
+    //   'Authorization': prefs.getString('Authorization').toString(),
+    //   'Content-Type': 'application/json'
+    // };
+
     final headers = {
-      'Authorization': prefs.getString('Authorization').toString(),
+      'Authorization':
+          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU1NzExNCwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.Klzu7VpJOg-lVCXkGz8vwiZ6_sSMzqa0Y5gcYWGB7ZcSM0ZTSUrTNKs44c6NmKhUGSXSnXUwgeqeLIIBAdhc5g',
       'Content-Type': 'application/json'
     };
 
