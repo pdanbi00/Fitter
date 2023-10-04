@@ -13,7 +13,7 @@ class ApiService {
   static const String baseUrl = "http://j9d202.p.ssafy.io:8000";
   late SharedPreferences prefs;
 
-  static void changeProfileImg(
+  static Future<UserProfile> changeProfileImg(
       pickedImage, Future<UserProfile> userProfile) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('Authorization').toString();
@@ -26,6 +26,8 @@ class ApiService {
         ),
       },
     );
+
+    print(pickedImage);
 
     final dio = Dio();
 
@@ -41,6 +43,14 @@ class ApiService {
 
     print(response);
 
+    final response2 = await http.get(
+      Uri.parse("$baseUrl/api/user/user-info"),
+      headers: {
+        "Authorization": token,
+      },
+    );
+
+    final userInfo = jsonDecode(utf8.decode(response2.bodyBytes));
     final image = Image.network(
       "$baseUrl/api/user/profile-img",
       headers: {
@@ -48,7 +58,16 @@ class ApiService {
       },
       fit: BoxFit.cover,
     );
-    userProfile.then((value) => value.image = image);
+
+    final userprofile = UserProfile(
+      box: userInfo["boxDto"]["boxName"],
+      ageGroup: userInfo["ageRange"],
+      email: userInfo["email"],
+      gender: userInfo["gender"],
+      nickname: userInfo["nickname"],
+      image: image,
+    );
+    return userprofile;
   }
 
   static void updateProfile(String nickname, String? boxId) async {
@@ -149,6 +168,8 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     late final headers = {
       'Authorization': prefs.getString('Authorization').toString(),
+      // "Authorization":
+      //     "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU3MTA3NSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.3DMwdvZYL7GSpBh3a5g2hESTJn8mYky0U-D7qrjHZ9zQL6Ojjn6qlqIyW4e5mlfPZKtC51xiWr59NRLV00j5HA",
     };
     const api = "api/calendar";
     final firstDayOfMonth =
@@ -176,6 +197,8 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     late final headers = {
       'Authorization': prefs.getString('Authorization').toString(),
+      // "Authorization":
+      //     "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU3MTA3NSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.3DMwdvZYL7GSpBh3a5g2hESTJn8mYky0U-D7qrjHZ9zQL6Ojjn6qlqIyW4e5mlfPZKtC51xiWr59NRLV00j5HA",
       'Content-Type': 'application/json',
     };
     const String api = "api/calendar/write";
