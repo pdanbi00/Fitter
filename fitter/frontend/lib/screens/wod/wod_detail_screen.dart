@@ -39,7 +39,7 @@ class _WodDetailScreenState extends State<WodDetailScreen> {
 
     final headers = {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU1NzExNCwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.Klzu7VpJOg-lVCXkGz8vwiZ6_sSMzqa0Y5gcYWGB7ZcSM0ZTSUrTNKs44c6NmKhUGSXSnXUwgeqeLIIBAdhc5g'
+          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU3MTA3NSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.3DMwdvZYL7GSpBh3a5g2hESTJn8mYky0U-D7qrjHZ9zQL6Ojjn6qlqIyW4e5mlfPZKtC51xiWr59NRLV00j5HA'
     };
 
     var url = Uri.parse(

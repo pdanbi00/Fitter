@@ -40,8 +40,11 @@ class _ChartScreenState extends State<ChartScreen> {
     // };
     final headers = {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU1NjcwOSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.oHBW06jowIoDwXwUDs1n3gWtWIyIk5iOncB5lSJMb3SuQIAIHq3VZgqVaT200cnmdYY8hwE-2Zu3elcyL5XuTQ'
+          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU3MTA3NSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.3DMwdvZYL7GSpBh3a5g2hESTJn8mYky0U-D7qrjHZ9zQL6Ojjn6qlqIyW4e5mlfPZKtC51xiWr59NRLV00j5HA'
     };
+    // Map<String, String> headers = {
+    //   'Authorization': accessToken.toString(),
+    // };
 
     var url = Uri.parse(
         'http://j9d202.p.ssafy.io:8000/api/record/list/${widget.workoutName}');
@@ -291,7 +294,9 @@ class MenuOverlay extends StatelessWidget {
       final accessToken = prefs.getString('Authorization');
 
       Map<String, String> headers = {
-        'Authorization': accessToken.toString(),
+        // 'Authorization': accessToken.toString(),
+        'Authorization':
+            'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU3MTA3NSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.3DMwdvZYL7GSpBh3a5g2hESTJn8mYky0U-D7qrjHZ9zQL6Ojjn6qlqIyW4e5mlfPZKtC51xiWr59NRLV00j5HA',
       };
 
       var url = Uri.parse(

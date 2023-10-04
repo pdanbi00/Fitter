@@ -39,13 +39,12 @@ class RecordApiService {
   static Future<List<PrListModel>> getPrRecordList(String prCategory) async {
     List<PrListModel> prListInstances = [];
     final prefs = await SharedPreferences.getInstance();
-    // final headers = {
-    //   'Authorization': prefs.getString('Authorization').toString(),
-    // };
     final headers = {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU1NjcwOSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.oHBW06jowIoDwXwUDs1n3gWtWIyIk5iOncB5lSJMb3SuQIAIHq3VZgqVaT200cnmdYY8hwE-2Zu3elcyL5XuTQ'
+          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU3MTA3NSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.3DMwdvZYL7GSpBh3a5g2hESTJn8mYky0U-D7qrjHZ9zQL6Ojjn6qlqIyW4e5mlfPZKtC51xiWr59NRLV00j5HA'
+      // 'Authorization': prefs.getString('Authorization').toString(),
     };
+
     final url = Uri.parse("$baseUrl/record/list/rank");
     final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -83,13 +82,12 @@ class RecordApiService {
   static Future<List<WodListModel>> getNamedWods(String named) async {
     List<WodListModel> namedWodInstances = [];
     final prefs = await SharedPreferences.getInstance();
-    // final headers = {
-    //   'Authorization': prefs.getString('Authorization').toString(),
-    // };
     final headers = {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU1NjcwOSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.oHBW06jowIoDwXwUDs1n3gWtWIyIk5iOncB5lSJMb3SuQIAIHq3VZgqVaT200cnmdYY8hwE-2Zu3elcyL5XuTQ'
+          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU3MTA3NSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.3DMwdvZYL7GSpBh3a5g2hESTJn8mYky0U-D7qrjHZ9zQL6Ojjn6qlqIyW4e5mlfPZKtC51xiWr59NRLV00j5HA'
+      // 'Authorization': prefs.getString('Authorization').toString(),
     };
+
     final url = Uri.parse('$baseUrl/named-wod/list/$named');
     final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -175,13 +173,12 @@ class RecordApiService {
   static Future<List<WodRankingModel>> getWodRanking(String wodName) async {
     List<WodRankingModel> wodRankingInstances = [];
     final prefs = await SharedPreferences.getInstance();
-    // final headers = {
-    //   'Authorization': prefs.getString('Authorization').toString(),
-    // };
     final headers = {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU1NjcwOSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.oHBW06jowIoDwXwUDs1n3gWtWIyIk5iOncB5lSJMb3SuQIAIHq3VZgqVaT200cnmdYY8hwE-2Zu3elcyL5XuTQ'
+          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU3MTA3NSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.3DMwdvZYL7GSpBh3a5g2hESTJn8mYky0U-D7qrjHZ9zQL6Ojjn6qlqIyW4e5mlfPZKtC51xiWr59NRLV00j5HA'
+      // 'Authorization': prefs.getString('Authorization').toString(),
     };
+
     final url = Uri.parse("$baseUrl/rank/$wodName");
     final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -212,29 +209,25 @@ class RecordApiService {
   static Future<List<MyWodRankingModel>> getMyWodRanking(String wodName) async {
     List<MyWodRankingModel> myWodRankingInstances = [];
     final prefs = await SharedPreferences.getInstance();
-    // final headers = {
-    //   'Authorization': prefs.getString('Authorization').toString(),
-    // };
     final headers = {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU1NjcwOSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.oHBW06jowIoDwXwUDs1n3gWtWIyIk5iOncB5lSJMb3SuQIAIHq3VZgqVaT200cnmdYY8hwE-2Zu3elcyL5XuTQ'
+          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU3MTA3NSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.3DMwdvZYL7GSpBh3a5g2hESTJn8mYky0U-D7qrjHZ9zQL6Ojjn6qlqIyW4e5mlfPZKtC51xiWr59NRLV00j5HA'
     };
+
     final url = Uri.parse("$baseUrl/rank/my-rank/$wodName");
     final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       final MyWodRankings = jsonDecode(response.body); // string 타입을 json으로 바꿔줌.
       print('wodName : $wodName');
       for (var MyWodRanking in MyWodRankings) {
-        if (MyWodRanking['content']['wodType']['type'] == 'For Time') {
-          MyWodRanking['content']['count'] = MyWodRanking['content']['time']
-                  ['hour'] +
+        if (MyWodRanking['wodDto']['wodType']['type'] == 'For Time') {
+          MyWodRanking['count'] = MyWodRanking['time']['hour'] +
               ':' +
-              MyWodRanking['content']['time']['minute'] +
+              MyWodRanking['time']['minute'] +
               ':' +
-              MyWodRanking['content']['time']['second'];
+              MyWodRanking['time']['second'];
         } else {
-          MyWodRanking['content']['count'] =
-              MyWodRanking['content']['count'].toString();
+          MyWodRanking['count'] = MyWodRanking['count'].toString();
         }
         print('wodRaking : $MyWodRanking');
         myWodRankingInstances.add(MyWodRankingModel.fromJson(MyWodRanking));
