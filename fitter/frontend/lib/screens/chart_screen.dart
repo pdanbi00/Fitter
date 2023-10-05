@@ -190,6 +190,7 @@ class _ChartScreenState extends State<ChartScreen> {
                         children: [
                           GestureDetector(
                             onTap: () {
+                              // widget.func();
                               Navigator.push(
                                   context,
                                   PageRouteBuilder(

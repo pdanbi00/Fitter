@@ -1,4 +1,6 @@
+import 'package:fitter/screens/chart_screen.dart';
 import 'package:fitter/screens/login_screen.dart';
+import 'package:fitter/screens/nav_bar.dart';
 import 'package:fitter/screens/record/record_screen.dart';
 
 import 'package:flutter/material.dart';
@@ -27,8 +29,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     FlutterNativeSplash.remove();
     return const MaterialApp(
-      // home: LoginScreen(),
-      home: RecordScreen(),
+      home: LoginScreen(),
+      // home: RecordScreen(),
     );
   }
 }
