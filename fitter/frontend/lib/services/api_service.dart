@@ -13,8 +13,7 @@ class ApiService {
   static const String baseUrl = "http://j9d202.p.ssafy.io:8000";
   late SharedPreferences prefs;
 
-  static Future<UserProfile> changeProfileImg(
-      pickedImage, Future<UserProfile> userProfile) async {
+  static Future<UserProfile> changeProfileImg(pickedImage) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('Authorization').toString();
 
@@ -41,8 +40,6 @@ class ApiService {
       ),
     );
 
-    print(response);
-
     final response2 = await http.get(
       Uri.parse("$baseUrl/api/user/user-info"),
       headers: {
@@ -67,6 +64,8 @@ class ApiService {
       nickname: userInfo["nickname"],
       image: image,
     );
+
+    print(response2.body);
     return userprofile;
   }
 
@@ -74,13 +73,17 @@ class ApiService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('Authorization').toString();
 
-    await http.put(
-      Uri.parse("$baseUrl/api/user/nickname"),
-      body: {"nickname": nickname},
-      headers: {
-        "Authorization": token,
-      },
-    );
+    late final headers = {
+      'Authorization': token,
+      'Content-Type': 'application/json',
+    };
+    final response = await http.put(Uri.parse("$baseUrl/api/user/nickname"),
+        headers: headers,
+        body: jsonEncode({
+          'nickname': nickname,
+        }));
+
+    print("asdasdasd$nickname");
 
     if (boxId != null) {
       print(boxId);
@@ -103,7 +106,7 @@ class ApiService {
     final token = prefs.getString('Authorization').toString();
 
     final url = Uri.parse("$baseUrl/api/user/profile");
-    final response = await http.delete(
+    await http.delete(
       url,
       headers: {
         "Authorization": token,
