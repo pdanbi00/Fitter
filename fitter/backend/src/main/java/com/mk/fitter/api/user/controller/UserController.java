@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.util.Date;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -68,25 +69,6 @@ public class UserController {
 			return new ResponseEntity<>(userService.getProfileImg(profileImgDto), headers, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error("getProfileImg :: {}", e.getMessage());
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@GetMapping(path = "/profile-img/{path}")
-	@ApiOperation(value = "path로 프로필 사진 조회", notes = "path로 프로필 사진을 조회하는 API")
-	public ResponseEntity<byte[]> getProfileImgByPath(@PathVariable(name = "path") String path, @RequestHeader(name = "Authorization") String accessToken) {
-		try {
-			// 프로필 사진 경로를 사용해서 File 객체 만듦
-			File file = new File("/" + path);
-
-			// 파일 확장자에 따라 파일 헤더 세팅
-			HttpHeaders headers = new HttpHeaders();
-			headers.add("Content-type", Files.probeContentType(file.toPath()));
-
-			return new ResponseEntity<>(userService.getProfileImgByPath(path), headers, HttpStatus.OK);
-
-		} catch (Exception e) {
-			log.error("getProfileImgByPath :: {}", e.getMessage());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
