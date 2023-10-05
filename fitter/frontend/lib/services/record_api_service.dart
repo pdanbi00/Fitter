@@ -40,9 +40,7 @@ class RecordApiService {
     List<PrListModel> prListInstances = [];
     final prefs = await SharedPreferences.getInstance();
     final headers = {
-      'Authorization':
-          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjYzNzY2NywiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.RbN7XNNP0t2hlQdMI8ARLkypl_Xld0dMLHSnMtfUbQxMnNFqZ7O4-GlyEE1A-g2p9AHeRK0EixwpFU-pdl3apA'
-      // 'Authorization': prefs.getString('Authorization').toString(),
+      'Authorization': prefs.getString('Authorization').toString(),
     };
 
     final url = Uri.parse("$baseUrl/record/list/rank");
@@ -83,9 +81,7 @@ class RecordApiService {
     List<WodListModel> namedWodInstances = [];
     final prefs = await SharedPreferences.getInstance();
     final headers = {
-      'Authorization':
-          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjYzNzY2NywiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.RbN7XNNP0t2hlQdMI8ARLkypl_Xld0dMLHSnMtfUbQxMnNFqZ7O4-GlyEE1A-g2p9AHeRK0EixwpFU-pdl3apA'
-      // 'Authorization': prefs.getString('Authorization').toString(),
+      'Authorization': prefs.getString('Authorization').toString(),
     };
 
     final url = Uri.parse('$baseUrl/named-wod/list/$named');
@@ -174,9 +170,7 @@ class RecordApiService {
     List<WodRankingModel> wodRankingInstances = [];
     final prefs = await SharedPreferences.getInstance();
     final headers = {
-      'Authorization':
-          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjYzNzY2NywiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.RbN7XNNP0t2hlQdMI8ARLkypl_Xld0dMLHSnMtfUbQxMnNFqZ7O4-GlyEE1A-g2p9AHeRK0EixwpFU-pdl3apA'
-      // 'Authorization': prefs.getString('Authorization').toString(),
+      'Authorization': prefs.getString('Authorization').toString(),
     };
 
     final url = Uri.parse("$baseUrl/rank/$wodName");
@@ -219,8 +213,7 @@ class RecordApiService {
   static Future<MyWodRankingModel> getMyWodRanking(String wodName) async {
     final prefs = await SharedPreferences.getInstance();
     final headers = {
-      'Authorization':
-          'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjYzNzY2NywiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.RbN7XNNP0t2hlQdMI8ARLkypl_Xld0dMLHSnMtfUbQxMnNFqZ7O4-GlyEE1A-g2p9AHeRK0EixwpFU-pdl3apA'
+      'Authorization': prefs.getString('Authorization').toString(),
     };
 
     final url = Uri.parse("$baseUrl/rank/my-rank/$wodName");

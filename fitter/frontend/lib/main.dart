@@ -1,5 +1,6 @@
 import 'package:fitter/screens/bunsan_screen.dart';
 import 'package:fitter/screens/login_screen.dart';
+import 'package:fitter/screens/nav_bar.dart';
 import 'package:fitter/screens/ranking/wod_ranking_screen.dart';
 import 'package:fitter/screens/record/record_screen.dart';
 import 'package:fitter/models/user_profile.dart';
@@ -38,10 +39,12 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FlutterNativeSplash.remove();
-    return const MaterialApp(home: LoginScreen());
-    // home: RecordScreen());
-    // home: WodRakingScreen());
-    // home: BunsanScreen());
+    return const MaterialApp(
+        // home: LoginScreen());
+        // home: RecordScreen());
+        // home: WodRakingScreen());
+        // home: BunsanScreen());
+        home: NavBarWidget());
 
     // return const MaterialApp(home: LoginScreen());
     // home: RecordScreen());
