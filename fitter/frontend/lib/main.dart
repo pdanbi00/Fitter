@@ -1,4 +1,7 @@
+import 'package:fitter/screens/bunsan_screen.dart';
 import 'package:fitter/screens/login_screen.dart';
+import 'package:fitter/screens/ranking/wod_ranking_screen.dart';
+import 'package:fitter/screens/record/record_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -29,6 +32,7 @@ class App extends StatelessWidget {
         // home: LoginScreen(),
         // home: RecordScreen());
         home: WodRakingScreen());
+    // home: BunsanScreen());
     // home: CrossfitRankingScreen());
   }
 }
