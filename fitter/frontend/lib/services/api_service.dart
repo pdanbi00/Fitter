@@ -195,8 +195,6 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     late final headers = {
       'Authorization': prefs.getString('Authorization').toString(),
-      // "Authorization":
-      //     "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU3MTA3NSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.3DMwdvZYL7GSpBh3a5g2hESTJn8mYky0U-D7qrjHZ9zQL6Ojjn6qlqIyW4e5mlfPZKtC51xiWr59NRLV00j5HA",
     };
     const api = "api/calendar";
     final firstDayOfMonth =
@@ -224,8 +222,6 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     late final headers = {
       'Authorization': prefs.getString('Authorization').toString(),
-      // "Authorization":
-      //     "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU3MTA3NSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.3DMwdvZYL7GSpBh3a5g2hESTJn8mYky0U-D7qrjHZ9zQL6Ojjn6qlqIyW4e5mlfPZKtC51xiWr59NRLV00j5HA",
       'Content-Type': 'application/json',
     };
     const String api = "api/calendar/write";
