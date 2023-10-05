@@ -39,14 +39,15 @@ public class FileController {
 	@ApiOperation(value = "path로 프로필 사진 조회", notes = "path로 프로필 사진을 조회하는 API")
 	public ResponseEntity<byte[]> getProfileImgByFileName(@PathVariable(name = "filename") String fileName) {
 		try {
+			String path = FILE_PATH + PROFILE_FOLDER + fileName;
 			// 프로필 사진 경로를 사용해서 File 객체 만듦
-			File file = new File(FILE_PATH + PROFILE_FOLDER + fileName);
+			File file = new File(path);
 
 			// 파일 확장자에 따라 파일 헤더 세팅
 			HttpHeaders headers = new HttpHeaders();
 			headers.add("Content-type", Files.probeContentType(file.toPath()));
 
-			return new ResponseEntity<>(fileService.getProfileImg(fileName), headers, HttpStatus.OK);
+			return new ResponseEntity<>(fileService.getProfileImg(path), headers, HttpStatus.OK);
 
 		} catch (Exception e) {
 			log.error("getProfileImgByPath :: {}", e.getMessage());
