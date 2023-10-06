@@ -13,6 +13,30 @@ class ApiService {
   static const String baseUrl = "http://j9d202.p.ssafy.io:8000";
   late SharedPreferences prefs;
 
+  static Future<bool> checkDuplicate(String nickname) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('Authorization').toString();
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/user/nickname/duplicate'),
+      headers: {
+        "Authorization": token,
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(
+        {
+          'nickname': nickname,
+        },
+      ),
+    );
+    print(nickname);
+    print(response.body);
+    if (response.body == "true") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   static Future<UserProfile> changeProfileImg(pickedImage) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('Authorization').toString();
@@ -125,14 +149,31 @@ class ApiService {
         "Authorization": token,
       },
     );
+
     final userInfo = jsonDecode(utf8.decode(response.bodyBytes));
-    final image = Image.network(
-      "$baseUrl/api/user/profile-img",
+
+    var a = await http.get(
+      Uri.parse("$baseUrl/api/user/profile-img"),
       headers: {
         "Authorization": token,
       },
-      fit: BoxFit.cover,
     );
+    late Image image;
+    try {
+      image = Image.network(
+        "$baseUrl/api/user/profile-img",
+        headers: {
+          "Authorization": token,
+        },
+        fit: BoxFit.cover,
+      );
+    } catch (e) {
+      image = Image.asset(
+        'assets/images/default_user_img.jpg',
+        fit: BoxFit.cover,
+      );
+    }
+
     // const jsonString =
     // '{"ageRange": "20대", "boxDto": { "boxName": "체육관" }, "email": "choiyc1446@gmail.com", "gender": true, "nickname": "최영창" }';
 
@@ -171,8 +212,6 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     late final headers = {
       'Authorization': prefs.getString('Authorization').toString(),
-      // "Authorization":
-      //     "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU3MTA3NSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.3DMwdvZYL7GSpBh3a5g2hESTJn8mYky0U-D7qrjHZ9zQL6Ojjn6qlqIyW4e5mlfPZKtC51xiWr59NRLV00j5HA",
     };
     const api = "api/calendar";
     final firstDayOfMonth =
@@ -200,8 +239,6 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     late final headers = {
       'Authorization': prefs.getString('Authorization').toString(),
-      // "Authorization":
-      //     "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjU3MTA3NSwiaWQiOjY1LCJlbWFpbCI6ImFhYUBhYWEuY29tIn0.3DMwdvZYL7GSpBh3a5g2hESTJn8mYky0U-D7qrjHZ9zQL6Ojjn6qlqIyW4e5mlfPZKtC51xiWr59NRLV00j5HA",
       'Content-Type': 'application/json',
     };
     const String api = "api/calendar/write";

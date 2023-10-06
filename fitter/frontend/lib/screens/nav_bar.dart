@@ -1,8 +1,10 @@
+import 'package:fitter/screens/bunsan_screen.dart';
 import 'package:fitter/screens/daily/daily_calendar.dart';
 
 import 'package:fitter/screens/daily_keyword_screen.dart';
 import 'package:fitter/screens/generator/generator.dart';
 import 'package:fitter/screens/mypage/mypage.dart';
+import 'package:fitter/screens/ranking/wod_ranking_screen.dart';
 import 'package:fitter/screens/record/record_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -69,10 +71,10 @@ class _BottomNavigationBarExampleState
   ];
 
   static const List<Widget> _widgetOptions = <Widget>[
-    Calendar(),
+    WodRakingScreen(),
     RecordScreen(),
     Calendar(),
-    DailyKeyword(),
+    BunsanScreen(),
     WodGenerator(),
   ];
 
