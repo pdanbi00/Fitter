@@ -2,7 +2,7 @@
 
 - SSAFY 특화 프로젝트 : 빅데이터 분산
 
-![fitter_logo.png](C:\Users\SSAFY\Desktop\fitter_logo.png)
+![fitter_logo.png](./images/fitter_logo.png)
 
 ## 기획의도
 
@@ -17,9 +17,9 @@
 
 ---
 
-![아키텍쳐_수정.png](C:\Users\SSAFY\Desktop\readmeGif\아키텍쳐_수정.png)
+![아키텍쳐_수정.png](./images/architecture.png)
 
-![erd.png](C:\Users\SSAFY\Desktop\readmeGif\erd.png)
+![erd.png](./images/erd.png)
 
 ## 주요 기능
 
@@ -30,15 +30,17 @@
 1. **소셜 로그인** : FITTER는 카카오 계정을 통한 소셜 로그인 기능을 지원합니다. 카카오 계정을 통해 별도의 회원가입 없이 서비스를 이용 할 수 있습니다.
 
 | <img title= "img1" src="./images/img1.png" width="280"> | <img title= "img2" src="./images/img2.png" width="316"> |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 
 2. **랭킹 시스템**: 네임드 와드의 기록을 통해 랭킹을 생성하여 사용자들은 현재 자신의 수준을 확인하고 다른 사용자와 경쟁하여 동기부여를 얻을 수 있습니다.
    
-   | <img src="file:///C:/Users/SSAFY/Desktop/readmeGif/랭킹.png" title="" alt="랭킹.png" width="282"> |
+   | <img src="./images/img3.png" title="" alt="랭킹.png" width="282"> |
    | --------------------------------------------------------------------------------------------- |
+
 
 3. **개인 최고 기록 (1RM) 기능**: 사용자들은 자신의 최고 1RM 기록을 어플리케이션에 기록할 수 있어서 성장과 발전을 추적할 수 있습니다.
 
-| ![Screenshot_1696489238.png](C:\Users\SSAFY\Downloads\스크린샷\Screenshot_1696489238.png) | ![Screenshot_1696489253.png](C:\Users\SSAFY\Downloads\스크린샷\Screenshot_1696489253.png) |
+| ![img4.png](./images/img4.png) | ![img5.png](./images/img5.png) |
 | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 
 4. **캘린더를 통한 기록 기능 :** 캘린더를 통해서 해당 일의 운동에 대한 기록과 일기를 기록하고 확인 할 수 있습니다.
